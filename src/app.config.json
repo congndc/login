@@ -1,0 +1,4 @@
+{
+  "baseUrl": "https://localhost:8000/api/auth/",
+  "title": "API"
+}
