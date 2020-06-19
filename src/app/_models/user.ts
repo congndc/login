@@ -4,4 +4,5 @@
     token_type?: string;
     expires_at: string;
     password?: string;
+    remember_me?: boolean;
 }

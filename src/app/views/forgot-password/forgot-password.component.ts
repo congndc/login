@@ -23,10 +23,10 @@ export class ForgotPasswordComponent implements OnInit {
   ngOnInit(): void {
   }
   onSubmit(){}
-  Send() {
-    this.router.navigate(['change-password'])
+  // Send() {
+  //   this.router.navigate(['change-password'])
     
-  }
+  // }
   goBack(){
     this.router.navigate(['/login'])
   }
