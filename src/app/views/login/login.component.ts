@@ -14,7 +14,8 @@ export class LoginComponent implements OnInit {
   submitted = false;
   returnUrl: string;
   error = '';
-
+  message_error: string;
+  message_success: string;
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
@@ -49,16 +50,20 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+
     this.loading = true;
     this.authenticationService.login(this.f.email.value, this.f.password.value, this.f.remember_me.value)
       .pipe(first())
       .subscribe(
         data => {
           this.router.navigate([this.returnUrl]);
+          this.loading = false;
+
         },
         error => {
           this.error = error;
           this.loading = false;
         });
   }
+
 }

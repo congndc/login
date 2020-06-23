@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { User } from '../_models';
 
+
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
     private currentUserSubject: BehaviorSubject<User>;
@@ -33,4 +34,20 @@ export class AuthenticationService {
         localStorage.removeItem('currentUser');
         this.currentUserSubject.next(null);
     }
+    
+    send_mail(email: string,){
+        return this.http.post<any>(`${environment.apiUrl}/send_mail`, { email,  })
+        .pipe(map(data => {
+            // localStorage.setItem('currentUser', JSON.stringify(data));
+            // this.currentUserSubject.next(data);
+            return data;
+        }));
+    }
+    
+    change_password(token:string, password: string){
+        return this.http.post<any>(`${environment.apiUrl}/update` + '/' + token, {token, password} )
+       .pipe(map(data => {  
+           return data;
+       }));
+   }
 }
