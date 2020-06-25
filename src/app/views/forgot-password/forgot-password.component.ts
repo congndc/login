@@ -1,3 +1,4 @@
+import { AlertService } from './../../_services/alert.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -21,7 +22,8 @@ export class ForgotPasswordComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private alertService: AlertService
   ) {
     // redirect to home if already logged in
     if (this.authenticationService.currentUserValue) {
@@ -44,7 +46,7 @@ export class ForgotPasswordComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
-
+    this.alertService.clear();
     // stop here if form is invalid
     if (this.forgotPasswordForm.invalid) {
       return;
@@ -52,26 +54,28 @@ export class ForgotPasswordComponent implements OnInit {
 
      this.loading = true;
     this.authenticationService.send_mail(this.f.email.value)
+    .pipe(first())
+      // .subscribe(
+      //   data => {
+      //     this.alertService.success(data.message);
+      //     this.loading = false;
+      //   },
       .subscribe(
         (data:any) => {
           if(data.message == 'Truy cập tài khoản của bạn để cài đặt lại mật khẩu!')
           {
-            this.message_success = "Thông tin đã được gửi. Vui lòng kiểm tra Email!";
-            this.message_error = null;
-          }
+            this.alertService.success(data.message);
+          } 
           else{
-            this.message_error = "Email không đúng hoặc không tồn tại. Vui lòng kiểm tra lại!";
-            this.message_success = null;
+             this.alertService.error(data.message);
           }
-          
           this.loading = false;
         },
         error => {
-          this.message_error = error;
+          this.alertService.error(error);
           this.loading = false;
         });
       }
-
   goBack(){
     this.router.navigate(['/login'])
   }

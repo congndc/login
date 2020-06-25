@@ -18,65 +18,63 @@ export class ChangePasswordComponent implements OnInit {
   message_error: string;
   token: string;
 
-  constructor(  
+  constructor(
     protected formBuilder: FormBuilder,
     protected route: ActivatedRoute,
     protected router: Router,
     protected authenticationService: AuthenticationService,
-    )
-     {
-       if (this.authenticationService.currentUserValue) {
-        this.router.navigate(['/']);
+  ) {
+    if (this.authenticationService.currentUserValue) {
+      this.router.navigate(['/']);
     }
   }
 
-    
-
-    ngOnInit() {
-
-      this.token = this.route.snapshot.queryParams.token;
 
 
-      this.changeForm = this.formBuilder.group({
-        newpassword: ['', [Validators.required,Validators.minLength(6)]],
-        confirmpassword: ['', [Validators.required, Validators.minLength(6)]],
-      });
-    }
-    get f() { return this.changeForm.controls; }
+  ngOnInit() {
 
-    
+    this.token = this.route.snapshot.queryParams.token;
 
-  onSubmit() {this.submitted = true;
+
+    this.changeForm = this.formBuilder.group({
+      newpassword: ['', [Validators.required, Validators.minLength(6)]],
+      confirmpassword: ['', [Validators.required, Validators.minLength(6)]],
+    });
+  }
+  get f() { return this.changeForm.controls; }
+
+
+
+  onSubmit() {
+    this.submitted = true;
 
     // stop here if form is invalid
     if (this.changeForm.invalid) {
       return;
     }
-    if(this.f.newpassword.value !=this.f.confirmpassword.value)
-    {
-            this.message_error = "Mật khẩu không đúng . Vui lòng kiểm tra lại!";;
-            this.message_success = null;
-            return;
-          
-        }
-          
+    if (this.f.newpassword.value != this.f.confirmpassword.value) {
+      this.message_error = "Mật khẩu không đúng . Vui lòng kiểm tra lại!";;
+      this.message_success = null;
+      return;
+
+    }
+
 
     this.loading = true;
     this.authenticationService.change_password(this.token, this.f.newpassword.value)
       .subscribe(
-        (data:any) => {
-          this.message_success = data.messages;
+        (data: any) => {
+          // this.message_success = data.messages;
+          alert("Bạn đã thay đổi mật khẩu thành công!")
+          this.router.navigate(['/login'])
           this.loading = false;
-          if(this.router.navigate(['/login'])){
-            alert("Bạn đã thay đổi mật khẩu thành công! Nhấn Ok để quay về trang đăng nhập")
-          }
         },
         error => {
           this.message_error = error;
           this.loading = false;
         });
-      }
-  goBack(){
+  }
+  goBack() {
     this.router.navigate(['/login'])
   }
 }

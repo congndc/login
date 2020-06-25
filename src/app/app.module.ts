@@ -46,6 +46,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { JwtInterceptor, ErrorInterceptor, fakeBackendProvider } from './_helpers';
 import { ForgotPasswordComponent } from './views/forgot-password/forgot-password.component';
 import { ChangePasswordComponent } from './views/change-password/change-password.component';
+import { AlertComponent } from './_components';
 
 
 @NgModule({
@@ -74,12 +75,12 @@ import { ChangePasswordComponent } from './views/change-password/change-password
     RegisterComponent,
     ForgotPasswordComponent,
     ChangePasswordComponent,
+    AlertComponent,
   ],
   providers: [
   { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
 
- 
   // provider used to create fake backend
   fakeBackendProvider,
   {

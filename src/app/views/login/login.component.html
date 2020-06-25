@@ -6,14 +6,13 @@
           <div class="card-group" style="margin-top: 5em;">
             <div class="card p-4">
               <div class="card-body">
-                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                <form id="form" name="form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                   <img src="assets/img/logo/logo_truonghoc.jpg" width="180" height="180" alt="Trường học Logo"
                     style="margin: auto; display: block;padding:2%">
                   <h1 class="text-align" style="text-align: center; font-size: 1.5em;font-weight: bold; ">Trường phổ
                     thông cơ sở Tân Mai</h1>
                   <h1 class="text-align" style="text-align: center;font-size: 1.3em; padding-bottom: 2%;">Đăng Nhập</h1>
-                  <div style="margin-bottom: 10px; padding: 1% " *ngIf="message_error" class="alert alert-danger mt-3 ">
-                    {{message_error}}</div>             
+                  <alert></alert>            
                   <div class="input-group mb-3" style="width:initial; margin: auto;">
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="icon-user"></i></span>
@@ -36,12 +35,11 @@
                       <div *ngIf="f.password.errors.minlength">Mật khẩu không được nhỏ hơn 6 ký tự</div>
                     </div>
                   </div>
-                  <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
                   <div class="row">
                     <div class="col-6 text-left" style="margin: auto; padding-bottom: 2%;">
                       <input type="checkbox" class="form-remember_me" name="remember_me" formControlName="remember_me"
                         id="remember_me" />
-                      <label  class="" style="">Nhớ đăng nhập</label>
+                      <label  >Nhớ đăng nhập</label>
                     </div>
                     <div class="col-6 text-right" style="margin: auto; padding-bottom: 4%;">
                       <button type="button" class="btn btn-link" [routerLink]="['/forgot-password']"

@@ -1,4 +1,5 @@
 ﻿export class User {
+    id: string;
     email: string;
     access_token: string;
     token_type?: string;
