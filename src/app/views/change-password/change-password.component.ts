@@ -67,6 +67,9 @@ export class ChangePasswordComponent implements OnInit {
         (data:any) => {
           this.message_success = data.messages;
           this.loading = false;
+          if(this.router.navigate(['/login'])){
+            alert("Bạn đã thay đổi mật khẩu thành công! Nhấn Ok để quay về trang đăng nhập")
+          }
         },
         error => {
           this.message_error = error;

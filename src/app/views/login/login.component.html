@@ -2,20 +2,19 @@
   <main class="main d-flex align-items-center">
     <div class="container" style="width: 46em; height: initial; margin: auto;">
       <div class="row">
-        <div class="col-md-8 mx-auto">
-          <div class="card-group" style="margin-top: 50px;">
+        <div class="col-md-10 mx-auto">
+          <div class="card-group" style="margin-top: 5em;">
             <div class="card p-4">
               <div class="card-body">
                 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-                  <img src="assets/img/logo/logo_truonghoc.jpg" width="100" height="100" alt="Trường học Logo"
-                    style="margin: auto; display: block;">
-                  <h1 class="text-align" style="text-align: center; font-size: 1.3em;font-weight: bold;">Trường phổ
+                  <img src="assets/img/logo/logo_truonghoc.jpg" width="180" height="180" alt="Trường học Logo"
+                    style="margin: auto; display: block;padding:2%">
+                  <h1 class="text-align" style="text-align: center; font-size: 1.5em;font-weight: bold; ">Trường phổ
                     thông cơ sở Tân Mai</h1>
-                  <h1 class="text-align" style="text-align: center;font-size: 1em;">Đăng Nhập</h1>
-                  <h1 class="text-align" style="text-align: center;font-size: 1em;">Đăng nhập vào tài khoản của bạn</h1>
+                  <h1 class="text-align" style="text-align: center;font-size: 1.3em; padding-bottom: 2%;">Đăng Nhập</h1>
                   <div style="margin-bottom: 10px; padding: 1% " *ngIf="message_error" class="alert alert-danger mt-3 ">
                     {{message_error}}</div>             
-                  <div class="input-group mb-3" style="width: 300px; margin: auto;">
+                  <div class="input-group mb-3" style="width:initial; margin: auto;">
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="icon-user"></i></span>
                     </div>
@@ -26,7 +25,7 @@
                       <div *ngIf="f.email.errors.email">Email không hợp lệ</div>
                     </div>
                   </div>
-                  <div class="input-group mb-4" style="width: 300px; margin: auto;">
+                  <div class="input-group mb-4" style="width:initial; margin: auto;">
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="icon-lock"></i></span>
                     </div>
@@ -35,30 +34,27 @@
                     <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
                       <div *ngIf="f.password.errors.required">Mật khẩu không được để trống</div>
                       <div *ngIf="f.password.errors.minlength">Mật khẩu không được nhỏ hơn 6 ký tự</div>
-
                     </div>
                   </div>
                   <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
-
                   <div class="row">
-                    <div class="col-6 " style="padding: 1% ;">
+                    <div class="col-6 text-left" style="margin: auto; padding-bottom: 2%;">
                       <input type="checkbox" class="form-remember_me" name="remember_me" formControlName="remember_me"
                         id="remember_me" />
-                      <label style="padding: 1% ;">Nhớ đăng nhập</label>
+                      <label  class="" style="">Nhớ đăng nhập</label>
                     </div>
-                    <div class="col-6 text-right">
-                      <button type="button" class="btn btn-link px-0" [routerLink]="['/forgot-password']"
-                        routerLinkActive="router-link-active">Quên mật khẩu?</button>
+                    <div class="col-6 text-right" style="margin: auto; padding-bottom: 4%;">
+                      <button type="button" class="btn btn-link" [routerLink]="['/forgot-password']"
+                        routerLinkActive="router-link-active" style="margin: auto;">Quên mật khẩu?</button>
                     </div>
                   </div>
-                  <div class="col-6" style="margin: auto; display: block;">
-                    <button [disabled]="loading" class="btn btn-primary" style="margin: auto; display: block;">
+                  <div class="col-6 " style="margin: auto; display: block;"> 
+                    <button [disabled]="loading" class="btn btn-block btn-ghost-primary active" aria-pressed="true">
                       <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
                       Đăng Nhập
-                    </button>
+                    </button>                  
                   </div>
                 </form>
-
               </div>
             </div>
           </div>

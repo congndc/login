@@ -7,6 +7,7 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 
+
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
 };
@@ -46,6 +47,7 @@ import { JwtInterceptor, ErrorInterceptor, fakeBackendProvider } from './_helper
 import { ForgotPasswordComponent } from './views/forgot-password/forgot-password.component';
 import { ChangePasswordComponent } from './views/change-password/change-password.component';
 
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -71,12 +73,13 @@ import { ChangePasswordComponent } from './views/change-password/change-password
     LoginComponent,
     RegisterComponent,
     ForgotPasswordComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
   ],
   providers: [
   { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
 
+ 
   // provider used to create fake backend
   fakeBackendProvider,
   {

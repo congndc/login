@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from '../../_services';
 import { first } from 'rxjs/operators';
 
+
 @Component({
   // selector: 'app-dashboard',
   templateUrl: 'login.component.html'
@@ -16,11 +17,13 @@ export class LoginComponent implements OnInit {
   error = '';
   message_error: string;
   message_success: string;
+  
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    
   ) {
     // redirect to home if already logged in
     if (this.authenticationService.currentUserValue) {
@@ -64,6 +67,9 @@ export class LoginComponent implements OnInit {
           this.error = error;
           this.loading = false;
         });
-  }
+    
 
+  }
 }
+
+
