@@ -3,7 +3,6 @@ import { FormGroup, FormBuilder, Validators, FormControl, Form } from '@angular/
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from '../../_services';
 import { first } from 'rxjs/operators';
-import { CookieService } from 'ngx-cookie-service';
 import { AlertService } from '../../_services/alert.service';
 
 @Component({

@@ -97,6 +97,10 @@ export const routes: Routes = [
         path: 'notifications',
         loadChildren: () => import('./views/notifications/notifications.module').then(m => m.NotificationsModule)
       },
+      {
+        path: 'account',
+        loadChildren: () => import('./views/account/account.module').then(m => m.AccountModule)
+      },
       // {
       //   path: 'theme',
       //   loadChildren: () => import('./views/theme/theme.module').then(m => m.ThemeModule)

@@ -62,13 +62,10 @@ export class ForgotPasswordComponent implements OnInit {
       //   },
       .subscribe(
         (data:any) => {
-          if(data.message == 'Truy cập tài khoản của bạn để cài đặt lại mật khẩu!')
-          {
+          // if(data.message == 'Vui lòng truy cập email của bạn để cài đặt lại mật khẩu!')
+          // {
             this.alertService.success(data.message);
-          } 
-          else{
-             this.alertService.error(data.message);
-          }
+          // 
           this.loading = false;
         },
         error => {

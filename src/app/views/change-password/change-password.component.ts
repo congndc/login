@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from '../../_services';
 import { first, switchMap } from 'rxjs/operators';
+import { AlertService } from '../../_services/alert.service';
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
@@ -23,6 +24,7 @@ export class ChangePasswordComponent implements OnInit {
     protected route: ActivatedRoute,
     protected router: Router,
     protected authenticationService: AuthenticationService,
+    private alertService: AlertService
   ) {
     if (this.authenticationService.currentUserValue) {
       this.router.navigate(['/']);
@@ -53,8 +55,8 @@ export class ChangePasswordComponent implements OnInit {
       return;
     }
     if (this.f.newpassword.value != this.f.confirmpassword.value) {
-      this.message_error = "Mật khẩu không đúng . Vui lòng kiểm tra lại!";;
-      this.message_success = null;
+      this.alertService.error("Mật khẩu không đúng . Vui lòng kiểm tra lại!");
+
       return;
 
     }
@@ -64,13 +66,21 @@ export class ChangePasswordComponent implements OnInit {
     this.authenticationService.change_password(this.token, this.f.newpassword.value)
       .subscribe(
         (data: any) => {
+
+         
+          if(this.f.newpassword.value == this.f.confirmpassword.value){
+              alert("Bạn đã thay đổi mật khẩu thành công!")
+            this.router.navigate(['/login'])
+            this.loading = false;
+            }
+            
+          
           // this.message_success = data.messages;
-          alert("Bạn đã thay đổi mật khẩu thành công!")
-          this.router.navigate(['/login'])
-          this.loading = false;
+
         },
         error => {
-          this.message_error = error;
+          // this.message_error = error;
+          this.alertService.error(error);
           this.loading = false;
         });
   }

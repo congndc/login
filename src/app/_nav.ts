@@ -26,6 +26,23 @@ export const navItems: INavData[] = [
       },
     ]
   },
+  {
+    name: 'Quản lý tài khoản',
+    url: '/account',
+    icon: 'icon-puzzle',
+    children: [
+      {
+        name: 'Thông tin tài khoản',
+        url: '/account/account-information',
+        icon: 'icon-puzzle'
+      },
+      {
+        name: 'Thay đổi mật khẩu',
+        url: '/account/change-pass',
+        icon: 'icon-puzzle'
+      },
+    ]
+  },
   // {
   //   title: true,
   //   name: 'Quản lý Danh mục'

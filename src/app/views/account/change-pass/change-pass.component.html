@@ -1,0 +1,65 @@
+<div class="app-body">
+  <main class="main d-flex align-items-center">
+    <div class="container" style="width: initial; height: initial; margin: auto;">
+      <div class="row">
+        <!-- <main class="main d-flex align-items-center">
+          <div class="container" style="width: 50em; height: 500px; margin: auto;"> -->
+        <div class="col-md-10 mx-auto">
+          <div class="card-group" style="margin-top: 5em;">
+            <div class="card p-4">
+              <div class="card-body">
+                <!-- <form id="form" name="form" [formGroup]="loginForm" (ngSubmit)="onSubmit()"> -->
+                  <form [formGroup]="change_pass" (ngSubmit)="onSubmit()">
+                  
+                  <!-- mk cũ -->
+                  <h1 class="text-align" style="text-align: center;font-size: 1.3em; padding-bottom: 2%;">Thay đổi mật
+                    khẩu</h1>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="icon-lock"></i></span>
+                    </div>
+                    <input type="password" id="old_password" placeholder="Mật khẩu cũ"
+                     formControlName="old_password"
+                      class="form-control" />
+                  </div>
+                  <!-- mk mới -->
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="icon-lock"></i></span>
+                    </div>
+                    <input type="password" id="new_password" placeholder="Mật khẩu mới"
+                     formControlName="new_password"
+                      class="form-control" />
+                  </div>
+                  <!-- nhập lại mk mới -->
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="icon-lock"></i></span>
+                    </div>
+                    <input type="password" id="confluent_password" placeholder="Nhập lại khẩu mới"
+                      formControlName="confluent_password" class="form-control" />
+                  </div>
+
+                  <div class="col-md-12">
+                    <div class="row" style="float: right;">
+                      <button class="col-md-12" id="Send" [disabled]="loading" class="btn btn-primary">
+                        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                        <i class="fa fa-lightbulb-o"></i>&nbsp;Gửi
+                      </button>
+                      &nbsp;
+                      <button class="col-md-12" class="btn btn-danger" (click)="goBack()">
+                        <i class="fa fa-lightbulb-o"></i>&nbsp;Hủy
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- </div>
+      </main> -->
+      </div>
+    </div>
+  </main>
+</div>
