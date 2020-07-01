@@ -8,7 +8,7 @@ const routes: Routes = [
   {
     path: '',
     data: {
-      title: 'Account'
+      title: 'Quản lý tài khoản'
     },
     children: [
       {
@@ -26,7 +26,7 @@ const routes: Routes = [
         path: 'change-pass',
         component: ChangePassComponent,
         data: {
-          title: 'change-pass'
+          title: 'Thay đổi mật khẩu'
         }
       },
       

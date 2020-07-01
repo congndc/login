@@ -1,9 +1,9 @@
-import { AlertService } from './../../_services/alert.service';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthenticationService } from '../../_services';
 import { first } from 'rxjs/operators';
+import { AuthenticationService } from '../../../_services';
+import { NotificationService } from '../../../_services/notification.service';
 @Component({
   selector: 'app-forgot-password',
   templateUrl: './forgot-password.component.html',
@@ -23,7 +23,8 @@ export class ForgotPasswordComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthenticationService,
-    private alertService: AlertService
+    private notifyService: NotificationService
+
   ) {
     // redirect to home if already logged in
     if (this.authenticationService.currentUserValue) {
@@ -35,45 +36,41 @@ export class ForgotPasswordComponent implements OnInit {
 
     this.forgotPasswordForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      
+
     });
     // // get return url from route parameters or default to '/'
     // this.returnUrl = this.route.snapshot.queryParams['returnUrl']  || '/';
   }
 
- 
+
   get f() { return this.forgotPasswordForm.controls; }
 
   onSubmit() {
     this.submitted = true;
-    this.alertService.clear();
     // stop here if form is invalid
     if (this.forgotPasswordForm.invalid) {
       return;
     }
-
-     this.loading = true;
-    this.authenticationService.send_mail(this.f.email.value)
-    .pipe(first())
-      // .subscribe(
-      //   data => {
-      //     this.alertService.success(data.message);
-      //     this.loading = false;
-      //   },
+    const url = window.location.origin;
+    const domainAndApp = url + '/#/change-password/?token=';
+    this.loading = true;
+    this.authenticationService.send_mail(this.f.email.value, domainAndApp)
+      .pipe(first())
       .subscribe(
-        (data:any) => {
-          // if(data.message == 'Vui lòng truy cập email của bạn để cài đặt lại mật khẩu!')
-          // {
-            this.alertService.success(data.message);
-          // 
+        (data: any) => {
+          if (data.message === 'Vui lòng truy cập email của bạn để thay đổi mật khẩu!') {
+            this.notifyService.showSuccess(data.message, 'Thành công!');
+          } else {
+            this.notifyService.showError(data.message, 'Lỗi!');
+          }
           this.loading = false;
         },
         error => {
-          this.alertService.error(error);
+          this.notifyService.showError(error, 'Lỗi!');
           this.loading = false;
         });
-      }
-  goBack(){
+  }
+  goBack() {
     this.router.navigate(['/login'])
   }
 }

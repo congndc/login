@@ -9,8 +9,8 @@ import { P500Component } from './views/error/500.component';
 import { LoginComponent } from './views/login/login.component';
 import { RegisterComponent } from './views/register/register.component';
 import { AuthGuard } from './_helpers';
-import { ForgotPasswordComponent } from './views/forgot-password/forgot-password.component';
 import { ChangePasswordComponent } from './views/change-password/change-password.component';
+import { ForgotPasswordComponent } from './views/forgot-password/forgot-password/forgot-password.component';
 
 export const routes: Routes = [
   // { path: '', component: HomeComponent, canActivate: [AuthGuard] },
@@ -53,16 +53,16 @@ export const routes: Routes = [
   },
   {
     path: 'forgot-password',
-    component:ForgotPasswordComponent,
-    data:{
-      title:'Forgot-Password Page'
+    component: ForgotPasswordComponent,
+    data: {
+      title: 'Forgot-Password Page'
     }
   },
   {
     path: 'change-password',
-    component:ChangePasswordComponent,
-    data:{
-      title:'Change-Password Page'
+    component: ChangePasswordComponent,
+    data: {
+      title: 'Change-Password Page'
     }
   },
   {
@@ -70,7 +70,7 @@ export const routes: Routes = [
     component: DefaultLayoutComponent,
     canActivate: [AuthGuard],
     data: {
-      title: 'Home'
+      title: 'Dashboard'
     },
     children: [
       {
@@ -98,17 +98,17 @@ export const routes: Routes = [
         loadChildren: () => import('./views/notifications/notifications.module').then(m => m.NotificationsModule)
       },
       {
+        path: 'widgets',
+        loadChildren: () => import('./views/widgets/widgets.module').then(m => m.WidgetsModule)
+      },
+      {
         path: 'account',
         loadChildren: () => import('./views/account/account.module').then(m => m.AccountModule)
       },
-      // {
-      //   path: 'theme',
-      //   loadChildren: () => import('./views/theme/theme.module').then(m => m.ThemeModule)
-      // },
       {
-        path: 'widgets',
-        loadChildren: () => import('./views/widgets/widgets.module').then(m => m.WidgetsModule)
-      }
+        path: 'user-management',
+        loadChildren: () => import('./views/user-management/user-management.module').then(m => m.UserManagementModule)
+      },
     ]
   },
   { path: '**', component: P404Component }

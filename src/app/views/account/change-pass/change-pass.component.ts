@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl, Form } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { first } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { User } from '../../../_models';
+import { AuthenticationService } from '../../../_services';
+import { NotificationService } from '../../../_services/notification.service';
 
 @Component({
   selector: 'app-change-pass',
@@ -9,32 +12,52 @@ import { first } from 'rxjs/operators';
   styleUrls: ['./change-pass.component.scss']
 })
 export class ChangePassComponent implements OnInit {
-  // Change_pass: FormGroup;
+  public currentUser: Observable<User>;
+  changePass: FormGroup;
   loading = false;
   submitted = false;
-  returnUrl: string;
+  email: string;
 
-  // convenience getter for easy access to form fields
   constructor(
     private formBuilder: FormBuilder,
-    private Change_pass: FormGroup,
-  ) {
+    protected route: ActivatedRoute,
+    protected router: Router,
+    protected authenticationService: AuthenticationService,
+    private notifyService: NotificationService
+  ) { }
 
-  }
-
-  get f() { return this.Change_pass.controls; }
+  get f() { return this.changePass.controls; }
   ngOnInit() {
-    this.Change_pass = this.formBuilder.group({
-      old_password: ['', [Validators.required, ]],
+    const tokenValue = localStorage.getItem('currentUser');
+    this.email = JSON.parse(tokenValue).email;
+    this.changePass = this.formBuilder.group({
+      old_password: ['', [Validators.required]],
       new_password: ['', [Validators.required, Validators.minLength(6)]],
-      confluent_password: ['', [Validators.required, Validators.minLength(6)]], 
+      confirm_password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
   onSubmit() {
-    
+    this.submitted = true;
+    if (this.changePass.invalid) {
+      return;
+    }
+    if (this.f.new_password.value !== this.f.confirm_password.value) {
+      this.notifyService.showWarning('Mật khẩu mới không trùng khớp', 'Thông báo!');
+      return;
+    }
+    this.loading = true;
+    this.authenticationService.user_update(this.email, this.f.old_password.value, this.f.new_password.value)
+      .subscribe(
+        (data: any) => {
+          this.notifyService.showSuccess(data.message, 'Thành công!');
+          this.loading = false;
+        },
+        error => {
+          this.notifyService.showError(error, 'Thông báo lỗi');
+          this.loading = false;
+        });
   }
- goBack(){
-
- }
-
+  goBack() {
+    this.router.navigate(['/']);
+  }
 }

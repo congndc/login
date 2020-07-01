@@ -12,7 +12,6 @@
                   <h1 class="text-align" style="text-align: center; font-size: 1.5em;font-weight: bold; ">Trường phổ
                     thông cơ sở Tân Mai</h1>
                   <h1 class="text-align" style="text-align: center;font-size: 1.3em; padding-bottom: 2%;">Đăng Nhập</h1>
-                  <alert></alert>            
                   <div class="input-group mb-3" style="width:initial; margin: auto;">
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="icon-user"></i></span>
@@ -39,18 +38,18 @@
                     <div class="col-6 text-left" style="margin: auto; padding-bottom: 2%;">
                       <input type="checkbox" class="form-remember_me" name="remember_me" formControlName="remember_me"
                         id="remember_me" />
-                      <label  >Nhớ đăng nhập</label>
+                      <label style="padding-left: 3px;">Nhớ đăng nhập</label>
                     </div>
                     <div class="col-6 text-right" style="margin: auto; padding-bottom: 4%;">
                       <button type="button" class="btn btn-link" [routerLink]="['/forgot-password']"
                         routerLinkActive="router-link-active" style="margin: auto;">Quên mật khẩu?</button>
                     </div>
                   </div>
-                  <div class="col-6 " style="margin: auto; display: block;"> 
+                  <div class="col-6 " style="margin: auto; display: block;">
                     <button [disabled]="loading" class="btn btn-block btn-ghost-primary active" aria-pressed="true">
                       <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
                       Đăng Nhập
-                    </button>                  
+                    </button>
                   </div>
                 </form>
               </div>

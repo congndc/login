@@ -1,0 +1,55 @@
+<div class="col-md-12">
+  <div class="card">
+    <div class="card-header">
+      <strong>Cấu hình người sử dụng</strong>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-2">
+          <div class="form-group row">
+            <form [formGroup]="oppoGradesForm">
+              <select formControlName="name" class="form-control">
+                <option disabled>Khối</option>
+                <option>Tất cả</option>
+                <option *ngFor="let grade of oppoGrades">{{grade}}</option>
+              </select>
+            </form>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group row">
+            <form [formGroup]="oppoClassForm">
+              <select formControlName="name" class="form-control">
+                <option disabled>Lớp</option>
+                <option>Tất cả</option>
+                <option *ngFor="let class of oppoClass">{{class}}</option>
+              </select>
+            </form>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group row">
+            <form [formGroup]="oppoStatusForm">
+              <select formControlName="name" class="form-control">
+                <option disabled>Trạng thái</option>
+                <option>Tất cả</option>
+                <option *ngFor="let status of oppoStatus">{{status}}</option>
+              </select>
+            </form>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <form class="form-inline d-flex justify-content-center md-form form-sm mt-0" style="float: right;">
+            <button class="col-md-12" id="Search" class="btn btn-primary">
+              <i class="fa fa-search  "></i>
+            </button>
+            <input class="form-control  ml-8 w-70" type="text" placeholder="Search" aria-label="Search">
+          </form>
+        </div>
+      </div>
+      <div>
+        <ng2-smart-table class="customtable" [settings]="settings" [source]="data" ></ng2-smart-table>
+      </div>
+    </div>
+  </div>
+</div>

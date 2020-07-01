@@ -44,10 +44,10 @@ import { ChartsModule } from 'ng2-charts';
 import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { JwtInterceptor, ErrorInterceptor, fakeBackendProvider } from './_helpers';
-import { ForgotPasswordComponent } from './views/forgot-password/forgot-password.component';
+import { ForgotPasswordComponent } from './views/forgot-password/forgot-password/forgot-password.component';
 import { ChangePasswordComponent } from './views/change-password/change-password.component';
-import { AlertComponent } from './_components';
 
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   imports: [
@@ -64,7 +64,8 @@ import { AlertComponent } from './_components';
     TabsModule.forRoot(),
     ChartsModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ToastrModule.forRoot()
   ],
   declarations: [
     AppComponent,
@@ -74,8 +75,7 @@ import { AlertComponent } from './_components';
     LoginComponent,
     RegisterComponent,
     ForgotPasswordComponent,
-    ChangePasswordComponent,
-    AlertComponent,
+    ChangePasswordComponent
   ],
   providers: [
   { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

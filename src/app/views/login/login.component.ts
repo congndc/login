@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from '../../_services';
 import { first } from 'rxjs/operators';
 import { AlertService } from '../../_services/alert.service';
+import { NotificationService } from '../../_services/notification.service';
 
 @Component({
   templateUrl: 'login.component.html'
@@ -20,15 +21,28 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthenticationService,
-    private alertService: AlertService
-
+    private notifyService: NotificationService
   ) {
     // redirect to home if already logged in
     if (this.authenticationService.currentUserValue) {
       this.router.navigate(['/']);
     }
   }
+  //   showToasterSuccess(){
+  //     this.notifyService.showSuccess("Data shown successfully !!", "ItSolutionStuff.com")
+  // }
 
+  // showToasterError(){
+  //     this.notifyService.showError("Something is wrong", "ItSolutionStuff.com")
+  // }
+
+  // showToasterInfo(){
+  //     this.notifyService.showInfo("This is info", "ItSolutionStuff.com")
+  // }
+
+  // showToasterWarning(){
+  //     this.notifyService.showWarning("This is warning", "ItSolutionStuff.com")
+  // }
   get f() { return this.loginForm.controls; }
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
@@ -42,8 +56,6 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
-    this.alertService.clear();
-    
     // stop here if form is invalid
     if (this.loginForm.invalid) {
       return;
@@ -58,8 +70,9 @@ export class LoginComponent implements OnInit {
           this.loading = false;
         },
         error => {
-          this.alertService.error(error);
+          this.notifyService.showError(error, 'Thông báo lỗi');
           this.loading = false;
         });
   }
 }
+

@@ -7,41 +7,53 @@ export const navItems: INavData[] = [
     icon: 'icon-speedometer',
     badge: {
       variant: 'info',
-      text: 'NEW'
-    }
+      text: 'NEW',
+    },
   },
   {
     title: true,
-    name: 'Quản lý & Thiết lập'
+    name: 'Quản lý & Thiết lập',
   },
-  {
-    name: 'Quản lý Danh mục',
-    url: '/base',
-    icon: 'icon-puzzle',
-    children: [
-      {
-        name: 'DM Trường học',
-        url: '/base/cards',
-        icon: 'icon-puzzle'
-      },
-    ]
-  },
+  // {
+  //   name: 'Quản lý Danh mục',
+  //   url: '/base',
+  //   icon: 'icon-puzzle',
+  //   children: [
+  //     {
+  //       name: 'DM Trường học',
+  //       url: '/base/cards',
+  //       icon: 'icon-puzzle',
+  //     },
+  //   ],
+  // },
   {
     name: 'Quản lý tài khoản',
     url: '/account',
     icon: 'icon-puzzle',
     children: [
-      {
-        name: 'Thông tin tài khoản',
-        url: '/account/account-information',
-        icon: 'icon-puzzle'
-      },
+      // {
+      //   name: 'Thông tin tài khoản',
+      //   url: '/account/account-information',
+      //   icon: 'icon-puzzle',
+      // },
       {
         name: 'Thay đổi mật khẩu',
         url: '/account/change-pass',
-        icon: 'icon-puzzle'
+        icon: 'icon-puzzle',
       },
-    ]
+    ],
+  },
+  {
+    name: 'Quản lý người sử dụng',
+    url: '/user-management',
+    icon: 'icon-puzzle',
+    children: [
+      {
+        name: 'Cấu hình nhóm người sử dụng',
+        url: '/user-management/user-management',
+        icon: 'icon-puzzle',
+      },
+    ],
   },
   // {
   //   title: true,
