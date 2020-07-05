@@ -208,12 +208,12 @@ export class UserGroupConfigurationComponent implements OnInit {
   dmKhoi: any[] = [];
   dmLop: any[] = [];
   ngOnInit() {
-    this.authenticationService.gradeList().subscribe((data) => {
-      let khoi = data["grades"][0];
+    this.authenticationService.gradeList().subscribe((datas) => {
+      let khoi = datas["grades"];
       this.dmKhoi = khoi;
     });
-    this.authenticationService.classList().subscribe((data) => {
-      let lop = data["classes"][0];
+    this.authenticationService.classList().subscribe((datas) => {
+      let lop = datas["classes"];
       this.dmLop = lop;
     });
   }

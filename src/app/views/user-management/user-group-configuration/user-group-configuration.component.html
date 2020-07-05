@@ -10,16 +10,17 @@
     <div class="card-body">
       <div class="form-group row">
         <div class="col-md-3">
-          <!-- formControlName="name" -->
           <select class="form-control">
             <option>Khối</option>
-            <option *ngFor="let grade of grades" [ngValue] ="grades">{{grades.name}}</option>
+            <option *ngFor="let grade of dmKhoi" [ngValue]="grade">
+              {{grade.name}}
+            </option>
           </select>
         </div>
         <div class="col-md-3">
           <select class="form-control">
             <option>Lớp</option>
-            <option *ngFor="let class of classes" [ngValue] ="classes">{{classes.name}}</option>
+            <option *ngFor="let class of dmLop">{{class.name}}</option>
           </select>
         </div>
         <div class="col-md-3">
