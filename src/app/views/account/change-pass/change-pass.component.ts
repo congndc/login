@@ -31,9 +31,9 @@ export class ChangePassComponent implements OnInit {
     const tokenValue = localStorage.getItem('currentUser');
     this.email = JSON.parse(tokenValue).email;
     this.changePass = this.formBuilder.group({
-      old_password: ['', [Validators.required]],
-      new_password: ['', [Validators.required, Validators.minLength(6)]],
-      confirm_password: ['', [Validators.required, Validators.minLength(6)]]
+      old_password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
+      new_password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
+      confirm_password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]]
     });
   }
   onSubmit() {
@@ -42,7 +42,7 @@ export class ChangePassComponent implements OnInit {
       return;
     }
     if (this.f.new_password.value !== this.f.confirm_password.value) {
-      this.notifyService.showWarning('Mật khẩu mới không trùng khớp', 'Thông báo!');
+      this.notifyService.showWarning('Mật khẩu mới và xác nhận mật khẩu mới không trùng khớp, vui lòng kiểm tra lại!', 'Cảnh báo!');
       return;
     }
     this.loading = true;
@@ -50,14 +50,20 @@ export class ChangePassComponent implements OnInit {
       .subscribe(
         (data: any) => {
           this.notifyService.showSuccess(data.message, 'Thành công!');
-          this.loading = false;
+          this.router.navigate(['/dashboard']);
         },
         error => {
-          this.notifyService.showError(error, 'Thông báo lỗi');
+          if (error.old_password) {
+            this.notifyService.showError(error.old_password, 'Thông báo lỗi');
+          } else if (error.new_password) {
+            this.notifyService.showError(error.new_password, 'Thông báo lỗi');
+          } else {
+            this.notifyService.showError(error, 'Thông báo lỗi');
+          }
           this.loading = false;
         });
   }
   goBack() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/dashboard']);
   }
 }

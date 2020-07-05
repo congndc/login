@@ -10,3 +10,21 @@ ng2-smart-table  table thead tr th {
   margin: 0;
   padding: .5em 1em;
 }
+.table-bordered {
+  border: 0px solid #c8ced3;
+}
+.has-search .form-control {
+  padding-left: 2.375rem;
+}
+
+.has-search .form-control-feedback {
+  position: absolute;
+  z-index: 2;
+  display: block;
+  width: 2.375rem;
+  height: 2.375rem;
+  line-height: 2.375rem;
+  text-align: center;
+  pointer-events: none;
+  color: #aaa;
+}

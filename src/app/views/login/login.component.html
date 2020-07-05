@@ -21,6 +21,7 @@
                     <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
                       <div *ngIf="f.email.errors.required">Email không được để trống</div>
                       <div *ngIf="f.email.errors.email">Email không hợp lệ</div>
+                      <div *ngIf="f.email.errors.maxlength">Email không được lớn hơn 100 ký tự</div>
                     </div>
                   </div>
                   <div class="input-group mb-4" style="width:initial; margin: auto;">
@@ -32,6 +33,7 @@
                     <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
                       <div *ngIf="f.password.errors.required">Mật khẩu không được để trống</div>
                       <div *ngIf="f.password.errors.minlength">Mật khẩu không được nhỏ hơn 6 ký tự</div>
+                      <div *ngIf="f.password.errors.maxlength">Mật khẩu không được lớn hơn 100 ký tự</div>
                     </div>
                   </div>
                   <div class="row">

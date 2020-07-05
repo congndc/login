@@ -79,4 +79,23 @@ export class AuthenticationService {
         })
       );
   }
+  gradeList(){
+    return this.http
+      .get<any>(`${environment.apiUrl}/grade/list`, )
+      .pipe(
+        map((data) => {
+          return data;
+        })
+      );
+  }
+  classList(){
+    return this.http
+      .get<any>(`${environment.apiUrl}/class/list`, )
+      .pipe(
+        map((data) => {
+          return data;
+        })
+      );
+  }
+
 }

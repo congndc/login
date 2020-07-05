@@ -1,11 +1,14 @@
 <div class="col-md-12">
   <div class="card">
     <div class="card-header">
+      <span class="fa-passwd-reset fa-stack">
+        <i class="fa fa-undo fa-stack-2x"></i>
+        <i class="fa fa-lock fa-stack-1x"></i>
+      </span>
       <strong>Thay đổi mật khẩu</strong>
     </div>
     <form class="form-horizontal" id="form" name="form" [formGroup]="changePass" (ngSubmit)="onSubmit()">
       <div class="card-body">
-
         <div class="form-group row">
           <div class="col-md-3" style="margin-left: 0%;"></div>
           <label class="col-md-2 col-form-label" for="hf-email">Mật khẩu hiện tại</label>
@@ -13,8 +16,9 @@
             <input type="password" id="old_password" placeholder="Nhập mật khẩu hiện tại" formControlName="old_password"
               class="form-control" [ngClass]="{ 'is-invalid': submitted && f.old_password.errors }" />
             <div *ngIf="submitted && f.old_password.errors" class="invalid-feedback">
-              <div *ngIf="f.old_password.errors.required">'Mật khẩu cũ không được để trống</div>
-              <div *ngIf="f.old_password.errors.minLength">Mật khẩu cũ không được nhỏ hơn 6 ký tự</div>
+              <div *ngIf="f.old_password.errors.required">Mật khẩu hiện tại không được để trống</div>
+              <div *ngIf="f.old_password.errors.minlength">Mật khẩu hiện tại không được nhỏ hơn 6 ký tự</div>
+              <div *ngIf="f.old_password.errors.maxlength">Mật khẩu hiện tại không được lớn hơn 100 ký tự</div>
             </div>
           </div>
         </div>
@@ -27,7 +31,8 @@
               [ngClass]="{ 'is-invalid': submitted && f.new_password.errors }" />
             <div *ngIf="submitted && f.new_password.errors" class="invalid-feedback">
               <div *ngIf="f.new_password.errors.required">Mật khẩu mới không được để trống</div>
-              <div *ngIf="f.new_password.errors.minLength">Mật khẩu mới không được nhỏ hơn 6 ký tự</div>
+              <div *ngIf="f.new_password.errors.minlength">Mật khẩu mới không được nhỏ hơn 6 ký tự</div>
+              <div *ngIf="f.new_password.errors.maxlength">Mật khẩu mới không được lớn hơn 100 ký tự</div>
             </div>
           </div>
         </div>
@@ -39,8 +44,9 @@
               formControlName="confirm_password" class="form-control"
               [ngClass]="{ 'is-invalid': submitted && f.confirm_password.errors }" />
             <div *ngIf="submitted && f.confirm_password.errors" class="invalid-feedback">
-              <div *ngIf="f.confirm_password.errors.required">Mật khẩu không được để trống</div>
-              <div *ngIf="f.confirm_password.errors.minLength">Mật khẩu không được nhỏ hơn 6 ký tự</div>
+              <div *ngIf="f.confirm_password.errors.required">Xác nhận mật khẩu không được để trống</div>
+              <div *ngIf="f.confirm_password.errors.minlength">Xác nhận mật khẩu không được nhỏ hơn 6 ký tự</div>
+              <div *ngIf="f.confirm_password.errors.maxlength">Xác nhận mật khẩu không được lớn hơn 100 ký tự</div>
             </div>
           </div>
         </div>
@@ -50,11 +56,11 @@
           <div class="row" style="float: right;">
             <button class="col-md-12" id="Send" [disabled]="loading" class="btn btn-primary">
               <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-              <i class="fa fa-lightbulb-o"></i>&nbsp;Gửi
+              <i class="fa fa-floppy-o"></i>&nbsp;Gửi
             </button>
             &nbsp;
             <button class="col-md-12" class="btn btn-danger" (click)="goBack()">
-              <i class="fa fa-lightbulb-o"></i>&nbsp;Hủy
+              <i class="fa fa-ban"></i>&nbsp;Hủy
             </button>
           </div>
         </div>

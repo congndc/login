@@ -1,9 +1,34 @@
 <div class="col-md-12">
   <div class="card">
     <div class="card-header">
+      <span class="fa-passwd-reset fa-stack">
+        <i class="fa fa-cog fa-stack-2x"></i>
+        <i class="fa fa-user-o fa-stack-1x"></i>
+      </span>
       <strong>Cấu hình người sử dụng</strong>
     </div>
     <div class="card-body">
+      <div class="form-group row">
+        <div class="col-md-3">
+          <!-- formControlName="name" -->
+          <select class="form-control">
+            <option>Khối</option>
+            <option *ngFor="let grade of dmKhoi">{{grade.name}}</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <select class="form-control">
+            <option>Lớp</option>
+            <option *ngFor="let class of dmLop">{{class.name}}</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <div class="form-group has-search">
+            <span class="fa fa-search form-control-feedback"></span>
+            <input type="text" class="form-control" placeholder="Search">
+          </div>
+          <!-- </div>
       <div class="row">
         <div class="col-md-2">
           <div class="form-group row">
@@ -46,9 +71,29 @@
             <input class="form-control  ml-8 w-70" type="text" placeholder="Search" aria-label="Search">
           </form>
         </div>
+      </div> -->
+          <div>
+            <!-- <ng2-smart-table class="customtable table table-bordered table-responsive" [settings]="settings"></ng2-smart-table> -->
+
+          </div>
+        </div>
+        <div class="col-md-12">
+          <ng2-smart-table class="customtable table table-bordered table-responsive" [settings]="settings"
+            [source]="data"></ng2-smart-table>
+        </div>
       </div>
-      <div>
-        <ng2-smart-table class="customtable" [settings]="settings" [source]="data" ></ng2-smart-table>
+      <div class="col-md-12">
+        <button type="submit" class="btn btn-primary">
+          <i class="icon-user icon-white"></i> Tải file mẫu
+        </button>
+        &nbsp;
+        <button type="submit" class="btn btn-primary" >
+          <i class="icon-user icon-white"></i> Nhập từ tệp
+        </button>
+        &nbsp;
+        <button type="submit" class="btn btn-primary" (click)="exportAsXLSX()">
+          <i class="icon-user icon-white"></i> Xuất ra tệp
+        </button>
       </div>
     </div>
   </div>
