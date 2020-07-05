@@ -13,68 +13,21 @@
           <!-- formControlName="name" -->
           <select class="form-control">
             <option>Khối</option>
-            <option *ngFor="let grade of dmKhoi">{{grade.name}}</option>
+            <option *ngFor="let grade of grades" [ngValue] ="grades">{{grades.name}}</option>
           </select>
         </div>
         <div class="col-md-3">
           <select class="form-control">
             <option>Lớp</option>
-            <option *ngFor="let class of dmLop">{{class.name}}</option>
+            <option *ngFor="let class of classes" [ngValue] ="classes">{{classes.name}}</option>
           </select>
         </div>
-
         <div class="col-md-3">
           <div class="form-group has-search">
             <span class="fa fa-search form-control-feedback"></span>
             <input type="text" class="form-control" placeholder="Search">
           </div>
-          <!-- </div>
-      <div class="row">
-        <div class="col-md-2">
-          <div class="form-group row">
-            <form [formGroup]="oppoGradesForm">
-              <select formControlName="name" class="form-control">
-                <option disabled>Khối</option>
-                <option>Tất cả</option>
-                <option *ngFor="let grade of oppoGrades">{{grade}}</option>
-              </select>
-            </form>
-          </div>
-        </div>
-        <div class="col-md-2">
-          <div class="form-group row">
-            <form [formGroup]="oppoClassForm">
-              <select formControlName="name" class="form-control">
-                <option disabled>Lớp</option>
-                <option>Tất cả</option>
-                <option *ngFor="let class of oppoClass">{{class}}</option>
-              </select>
-            </form>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="form-group row">
-            <form [formGroup]="oppoStatusForm">
-              <select formControlName="name" class="form-control">
-                <option disabled>Trạng thái</option>
-                <option>Tất cả</option>
-                <option *ngFor="let status of oppoStatus">{{status}}</option>
-              </select>
-            </form>
-          </div>
-        </div>
-        <div class="col-md-5">
-          <form class="form-inline d-flex justify-content-center md-form form-sm mt-0" style="float: right;">
-            <button class="col-md-12" id="Search" class="btn btn-primary">
-              <i class="fa fa-search  "></i>
-            </button>
-            <input class="form-control  ml-8 w-70" type="text" placeholder="Search" aria-label="Search">
-          </form>
-        </div>
-      </div> -->
           <div>
-            <!-- <ng2-smart-table class="customtable table table-bordered table-responsive" [settings]="settings"></ng2-smart-table> -->
-
           </div>
         </div>
         <div class="col-md-12">
@@ -87,11 +40,11 @@
           <i class="icon-user icon-white"></i> Tải file mẫu
         </button>
         &nbsp;
-        <button type="submit" class="btn btn-primary" >
+        <button type="submit" class="btn btn-primary">
           <i class="icon-user icon-white"></i> Nhập từ tệp
         </button>
         &nbsp;
-        <button type="submit" class="btn btn-primary" (click)="exportAsXLSX()">
+        <button type="submit" class="btn btn-primary">
           <i class="icon-user icon-white"></i> Xuất ra tệp
         </button>
       </div>

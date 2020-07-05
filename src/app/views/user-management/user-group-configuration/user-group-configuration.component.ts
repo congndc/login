@@ -1,67 +1,15 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
-import { Router, ActivatedRoute } from "@angular/router";
-import { NotificationService } from "../../../_services/notification.service";
+import { ActivatedRoute, Router } from "@angular/router";
 import { AuthenticationService } from "../../../_services";
-import * as XLSX from "xlsx";
-import { ExcelServicesService } from "../../../_services/excel.service";
-import { HttpClient } from "@angular/common/http";
-import { Contact } from "../../../_models/contact.model";
-import * as faker from 'faker';
+import { NotificationService } from "../../../_services/notification.service";
+
 @Component({
   selector: "app-User-group-configuration",
   templateUrl: "./User-group-configuration.component.html",
   styleUrls: ["./User-group-configuration.component.scss"],
 })
 export class UserGroupConfigurationComponent implements OnInit {
-  title = "excel-upload-download";
-  excel = [];
-  importContacts: Contact[] = [];
-  exportContacts: Contact[] = [];
-  submitted = false;
-  constructor(
-    protected route: ActivatedRoute,
-    protected router: Router,
-    protected authenticationService: AuthenticationService,
-    private notifyService: NotificationService,
-    private excelService: ExcelServicesService,
-    private http: HttpClient
-  ) {}
-  exportAsXLSX(): void {
-    this.excelService.exportAsExcelFile(this.excel, "sample");
-  }
-  
-  // onFileChange(evt: any) {
-  //   const target: DataTransfer = <DataTransfer>(evt.target);
-  //   if (target.files.length !== 1) throw new Error('Cannot use multiple files');
-
-  //   const reader: FileReader = new FileReader();
-  //   reader.onload = (e: any) => {
-
-  //     const bstr: string = e.target.result;
-  //     const data = <any[]>this.excelService.importFromFile(bstr);
-
-  //     const header: string[] = Object.getOwnPropertyNames(new Contact());
-  //     const importedData = data.slice(1, -1);
-
-  //     this.importContacts = importedData.map(arr => {
-  //       const obj = {};
-  //       for (let i = 0; i < header.length; i++) {
-  //         const k = header[i];
-  //         obj[k] = arr[i];
-  //       }
-  //       return <Contact>obj;
-  //     })
-
-  //   };
-  //   reader.readAsBinaryString(target.files[0]);
-
-  // }
-
-  // exportData(tableId: string) {
-  //   this.excelService.exportToFile("contacts", tableId);
-  // }
-
   data = [
     {
       id: 1,
@@ -161,7 +109,6 @@ export class UserGroupConfigurationComponent implements OnInit {
       passed: "No",
     },
   ];
-
   settings = {
     columns: {
       id: {
@@ -195,13 +142,20 @@ export class UserGroupConfigurationComponent implements OnInit {
           },
         },
       },
-      grade: {
+      username: {
         title: "Khối",
         type: "html",
         editor: {
           type: "list",
           config: {
-            list: [{ value: {} }],
+            list: [
+              { value: "Antonette", title: "Antonette" },
+              { value: "Bret", title: "Bret" },
+              {
+                value: "<b>Samantha</b>",
+                title: "Samantha",
+              },
+            ],
           },
         },
       },
@@ -211,7 +165,14 @@ export class UserGroupConfigurationComponent implements OnInit {
         editor: {
           type: "list",
           config: {
-            list: [{}],
+            list: [
+              { value: "Antonette", title: "Antonette" },
+              { value: "Bret", title: "Bret" },
+              {
+                value: "<b>Samantha</b>",
+                title: "Samantha",
+              },
+            ],
           },
         },
       },
@@ -237,37 +198,23 @@ export class UserGroupConfigurationComponent implements OnInit {
       // },
     },
   };
+  constructor(
+    private formBuilder: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private authenticationService: AuthenticationService,
+    private notifyService: NotificationService
+  ) {}
   dmKhoi: any[] = [];
   dmLop: any[] = [];
   ngOnInit() {
-    this.submitted = true;
-    this.authenticationService.gradeList().subscribe((datas) => {
-      let khoi = datas["grades"];
+    this.authenticationService.gradeList().subscribe((data) => {
+      let khoi = data["grades"][0];
       this.dmKhoi = khoi;
     });
-    this.authenticationService.classList().subscribe((datas) => {
-      let lop = datas["classes"];
+    this.authenticationService.classList().subscribe((data) => {
+      let lop = data["classes"][0];
       this.dmLop = lop;
     });
-
-    for (let i = 0; i <= 25; i++) {
-      this.excel.push({
-        firstName: `first${i}`,
-        lastName: `last${i}`,
-        email: `abc${i}@gmail.com`,
-        address: `000${i} street city, ST`,
-        zipcode: `0000${i}`,
-      });
-    } 
-    // call api thay code cung
-
-    // for (let index = 0; index < 10; index++) {
-    //   const contact = new Contact();
-    //   contact.name = faker.name.findName();
-    //   contact.phone = faker.phone.phoneNumber();
-    //   contact.email = faker.internet.email();
-    //   contact.address = faker.address.streetAddress();
-    //   this.exportContacts.push(contact);
-    // }
   }
 }

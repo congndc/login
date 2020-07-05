@@ -37,8 +37,6 @@
     "bootstrap": "^4.4.1",
     "chart.js": "^2.9.3",
     "core-js": "^2.6.11",
-    "faker": "^4.1.0",
-    "file-saver": "^2.0.2",
     "flag-icon-css": "^3.4.6",
     "font-awesome": "^4.7.0",
     "moment": "^2.27.0",
@@ -55,7 +53,6 @@
     "ts-helpers": "^1.1.2",
     "tslib": "^1.11.1",
     "web-animations-js": "^2.3.2",
-    "xlsx": "^0.16.3",
     "zone.js": "~0.10.3"
   },
   "devDependencies": {
