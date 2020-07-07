@@ -30,7 +30,7 @@ export class AuthenticationService {
       })
       .pipe(
         map((user) => {
-          localStorage.setItem("currentUser", JSON.stringify(user));
+          localStorage.setItem('currentUser', JSON.stringify(user));
           this.currentUserSubject.next(user);
           return user;
         })
@@ -38,9 +38,9 @@ export class AuthenticationService {
   }
   logout() {
     // remove user from local storage to log user out
-    localStorage.removeItem("currentUser");
+    localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
-    this.router.navigate(["/login"]);
+    this.router.navigate(['/login']);
   }
 
   send_mail(email: string, host: string) {
@@ -55,10 +55,7 @@ export class AuthenticationService {
 
   change_password(token: string, password: string) {
     return this.http
-      .post<any>(`${environment.apiUrl}/update` + "/" + token, {
-        token,
-        password,
-      })
+      .post<any>(`${environment.apiUrl}/update` + '/' + token, {  token,password,})
       .pipe(
         map((data) => {
           return data;
@@ -67,40 +64,19 @@ export class AuthenticationService {
   }
 
   check_password(token: string) {
-    return this.http
-      .post<any>(`${environment.apiUrl}/mail/check_password`, { token })
-      .pipe(
-        map((data) => {
-          return data;
-        })
-      );
+    return this.http.post<any>(`${environment.apiUrl}/mail/check_password`, { token })
+      .pipe(map(data => {
+        return data;
+      }));
   }
 
   user_update(email: string, old_password: string, new_password: string) {
     return this.http
-      .post<any>(`${environment.apiUrl}/user/update`, {
-        email,
-        old_password,
-        new_password,
-      })
+      .post<any>(`${environment.apiUrl}/user/update`, { email, old_password, new_password })
       .pipe(
         map((data) => {
           return data;
         })
       );
-  }
-  gradeList() {
-    return this.http.get<any>(`${environment.apiUrl}/grade/list`).pipe(
-      map((data) => {
-        return data;
-      })
-    );
-  }
-  classList() {
-    return this.http.get<any>(`${environment.apiUrl}/class/list`).pipe(
-      map((data) => {
-        return data;
-      })
-    );
   }
 }

@@ -5,6 +5,6 @@
 
 export const environment = {
   production: false,
-  name: "(DEV)",
-  apiUrl: "http://127.0.0.1:8000/api/auth",
+  name: '(DEV)',
+  apiUrl: 'http://127.0.0.1:8000/api/auth'
 };

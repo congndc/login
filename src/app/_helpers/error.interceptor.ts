@@ -21,12 +21,12 @@ export class ErrorInterceptor implements HttpInterceptor {
         // const errors = err.error.message || err.statusText;
         // return throwError(errors);
       } else if (err.status === 422) {
-        const errors = err.error.message || err.statusText;
+        const errors = err.error || err.status;
         return throwError(errors);
       } else if (err.status === 429) {
         this.router.navigate(['/404']);
       } else {
-        const errors = err.error.message || err.statusText;
+        const errors = err.error.message || err.status;
         location.reload(true);
         return throwError(errors);
       }
