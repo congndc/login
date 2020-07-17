@@ -641,42 +641,42 @@ export class UserGroupConfigurationComponent implements OnInit {
     }
 
     // Call API cập nhật cấu hình nhóm người sử dụng
-    // this.userGroupConfigurationService.updateUserGroupConfig(
-    //   id,
-    //   this.code.value,
-    //   this.name.value,
-    //   this.idGrade,
-    //   this.idClass,
-    //   this.status.value,
-    //   this.description.value
-    // ).subscribe(
-    //   result => {
-    //     $('#editUserGroupConfigurationModal').modal('hide');
-    //     this.notifyService.showSuccess('Dữ liệu đã được cập nhật thành công', 'Thông báo');
-    //     this.searchByInput();
-    //     this.ngOnDestroy();
-    //   },
-    //   error => {
-    //     if (error.messages != undefined) {
-    //       if (error.messages.name) {
-    //         this.notifyService.showError(error.messages["name"], 'Thông báo lỗi');
-    //       } else if (error.messages.grade_id) {
-    //         this.notifyService.showError(error.messages["grade_id"], 'Thông báo lỗi');
-    //       } else if (error.messages.class_id) {
-    //         this.notifyService.showError(error.messages["class_id"], 'Thông báo lỗi');
-    //       }
-    //       else {
-    //         this.notifyService.showError(error.messages["code"], 'Thông báo lỗi');
-    //       }
-    //     }
-    //     else {
-    //       if (error.message) {
-    //         this.notifyService.showError(error.message, 'Thông báo lỗi');
-    //       } else {
-    //         this.notifyService.showError(error + '\n \ ', 'Thông báo lỗi');
-    //       }
-    //     }
-    //   });
+    this.userGroupConfigurationService.updateUserGroupConfig(
+      id,
+      this.code.value,
+      this.name.value,
+      this.idGrade,
+      this.idClass,
+      this.status.value,
+      this.description.value
+    ).subscribe(
+      result => {
+        $('#editUserGroupConfigurationModal').modal('hide');
+        this.notifyService.showSuccess('Dữ liệu đã được cập nhật thành công', 'Thông báo');
+        this.searchByInput();
+        this.ngOnDestroy();
+      },
+      error => {
+        if (error.messages != undefined) {
+          if (error.messages.name) {
+            this.notifyService.showError(error.messages["name"], 'Thông báo lỗi');
+          } else if (error.messages.grade_id) {
+            this.notifyService.showError(error.messages["grade_id"], 'Thông báo lỗi');
+          } else if (error.messages.class_id) {
+            this.notifyService.showError(error.messages["class_id"], 'Thông báo lỗi');
+          }
+          else {
+            this.notifyService.showError(error.messages["code"], 'Thông báo lỗi');
+          }
+        }
+        else {
+          if (error.message) {
+            this.notifyService.showError(error.message, 'Thông báo lỗi');
+          } else {
+            this.notifyService.showError(error + '\n \ ', 'Thông báo lỗi');
+          }
+        }
+      });
   }
 
   // Reset form

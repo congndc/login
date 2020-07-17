@@ -15,7 +15,7 @@
               <div class="form-group has-search" style="margin-bottom: -13px !important; margin-top: 6px;" tabindex="1">
                 <span class="fa fa-search form-control-feedback"></span>
                 <input type="text" class="form-control" #searchByKeyWordInput
-                  (keyup.enter)="searchByKeyWord($event.target.value);" placeholder="Mã nhóm / Tên nhóm">
+                  (keyup.enter)="searchByKeyWord($event.target.value);" placeholder="Tìm kiếm">
               </div>
             </div>
           </div>
@@ -26,21 +26,32 @@
       max-height: 50%;border:1px solid #80808069;border-radius: 3px; margin-bottom: 1%; padding-top: 1%;">
           <div class="col-md-12">
             <div class="row" style="padding: 0 15px;">
-
-              <div class="col-md-8">
-                <div class="col-md-1 " style="float: left; padding: 2% 0 0 0">
+              <div class="col-md-4">
+                <div class="col-md-3 " style="float: left; padding: 2% 0 0 0">
+                  <label for="">Đối tượng</label>
+                </div>
+                <div class="col-md-9" style="float: right;padding: 0;">
+                  <ng-multiselect-dropdown #selectGroupSearch tabindex="2" [placeholder]="'--- Danh sách đối tượng ---'"
+                    [data]="" [(ngModel)]="selectedDoiTuong" [settings]="dropdownDoiTuongSettings"
+                    (onSelect)="onItemDoiTuongSelect($event)" (onSelectAll)="onSelectAllDoiTuong($event)"
+                    [ngModelOptions]="{standalone: true}">
+                  </ng-multiselect-dropdown>                 
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="col-md-2 " style="float: left; padding: 2% 0 0 0">
                   <label for="">Nhóm</label>
                 </div>
-                <div class="col-md-11" style="float: left;width: auto;">
-                  <ng-multiselect-dropdown #selectGroupSearch tabindex="2" [placeholder]="'--- Danh sách nhóm ---'"
+                <div class="col-md-10" style="float: left;padding: 0;">
+                  <ng-multiselect-dropdown #selectGroupSearch tabindex="3" [placeholder]="'--- Danh sách nhóm ---'"
                     [data]="" [(ngModel)]="selectedNhom" [settings]="dropdownSettings" (onSelect)="onItemSelect($event)"
                     (onSelectAll)="onSelectAll($event)" (onDeSelect)="OnItemDeSelect($event)"
                     [ngModelOptions]="{standalone: true}" (onDeSelectAll)="onItemDeSelectAll($event)">
                     [formControlName]="groupSearch"
                     >
                   </ng-multiselect-dropdown>
-                  <!-- <p *ngIf="requiredgroupSearchField == false" style="color: red;">
-                      Vui lòng chọn dữ liệu khối!
+                  <!-- <p *ngIf="requiredGroupSearchField == false" style="color: red;">
+                      Vui lòng chọn dữ liệu Nhóm!
                     </p> -->
                 </div>
               </div>
@@ -136,14 +147,14 @@
                         </ng-template>
                       </td>
                       <td>
-                        <div class="row">
-                          <div class="col-md-6" style="margin: 4px;">
+                        <div class="row" style="padding: 1% 15px;">
+                          <div class="col-md-6">
                             <button type="button" class="btn btn-primary" data-toggle="modal"
                               data-target="#editUserAccountModal" (click)="getByIdUserAccount(item.id)">
                               Sửa
                             </button>
                           </div>
-                          <div class="col-md-6" style="float: right;margin: 3px -22px;">
+                          <div class="col-md-6">
                             <button type="button" class="btn btn-danger" (click)="deleteUserAccount(item.id)">
                               Xóa
                             </button>
@@ -152,7 +163,7 @@
                       </td>
                     </tr>
                   </tbody>
-                  <tbody *ngIf="checkuserAccountData === false">
+                  <tbody *ngIf="checkUserAccountData === false">
                     <tr>
                       <td colspan="8"> Dữ liệu không tồn tại
                       </td>
@@ -192,64 +203,83 @@
                   <div class="modal-body">
                     <div class="col-lg-12 col-md-12 col-sm-12">
                       <div class="form-group">
-                        <label for="code">Mã nhóm</label>
-                        <input class="form-control" type="text" name="text-input" formControlName="code"
-                          placeholder="Vui lòng nhập mã nhóm" [ngClass]="{ 'is-invalid': submitted && f.code.errors }">
-                        <div *ngIf="submitted && f.code.errors" class="invalid-feedback">
-                          <div *ngIf="f.code.errors.required">Mã nhóm không được để trống</div>
-                          <div *ngIf="f.code.errors.minlength">Mã nhóm không được nhỏ hơn 2 ký tự</div>
-                          <div *ngIf="f.code.errors.maxlength">Mã nhóm không được lớn hơn 100 ký tự</div>
+                        <label for="user_name">Tên đăng nhập </label>
+                        <input class="form-control" type="text" name="text-input" formControlName="user_name"
+                          placeholder="Vui lòng nhập tên đăng nhập"
+                          [ngClass]="{ 'is-invalid': submitted && f.user_name.errors }">
+                        <div *ngIf="submitted && f.user_name.errors" class="invalid-feedback">
+                          <div *ngIf="f.user_name.errors.required">Tên đăng nhập không được để trống</div>
+                          <div *ngIf="f.user_name.errors.minlength">Tên đăng nhập không được nhỏ hơn 2 ký tự</div>
+                          <div *ngIf="f.user_name.errors.maxlength">Tên đăng nhập không được lớn hơn 50 ký tự</div>
                         </div>
                       </div>
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12">
                       <div class="form-group">
-                        <label for="name">Tên nhóm</label>
-                        <input class="form-control" type="text" formControlName="name" name="text-input"
-                          placeholder="Vui lòng nhập tên nhóm" [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
-                        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-                          <div *ngIf="f.name.errors.required">Tên nhóm không được để trống</div>
-                          <div *ngIf="f.name.errors.minlength">Tên nhóm không được nhỏ hơn 2 ký tự</div>
-                          <div *ngIf="f.name.errors.maxlength">Tên nhóm không được lớn hơn 100 ký tự</div>
+                        <label for="email">Email </label>
+                        <input class="form-control" type="text" name="text-input" formControlName="email"
+                          placeholder="Vui lòng nhập Email" [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+                        <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                          <div *ngIf="f.email.errors.required">Email không được để trống</div>
+                          <div *ngIf="f.email.errors.maxlength">Email không được lớn hơn 100 ký tự</div>
+                          <div *ngIf="f.email.errors.email">Email không hợp lệ</div>
                         </div>
                       </div>
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12">
                       <div class="form-group">
-                        <label for="Group">Khối</label>
-                        <ng-multiselect-dropdown #selectGroupInsert [placeholder]="'--- Danh sách khối ---'"
-                          [data]="ddlGroupInsert" [(ngModel)]="selectedGroupsInsert" [settings]="ddlInsertGroupSettings"
-                          (onSelect)="onGroupSelectInsert($event)" [ngModelOptions]="{standalone: true}"
-                          (onDeSelect)="OnGroupDeSelectInsert($event)">
+                        <label for="group_user">Nhóm</label>
+                        <ng-multiselect-dropdown #selectClassInsert [placeholder]="'--- Danh sách Nhóm ---'" [data]=""
+                          [settings]="ddlInsertGroupSettings" (onSelect)="onGroupSelectInsert($event)"
+                          (onDeSelect)="onGroupDeSelectInsert($event)">
                         </ng-multiselect-dropdown>
                         <p *ngIf="reqGroupInsertField == false" style="color: red;font-size: 11px;">
-                          Vui lòng chọn dữ liệu khối!
+                          Vui lòng chọn dữ liệu Nhóm!
                         </p>
                       </div>
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12">
                       <div class="form-group">
-                        <label for="class">Lớp</label>
-                        <ng-multiselect-dropdown #selectClassInsert [placeholder]="'--- Danh sách lớp ---'"
-                          [data]="ddlClassInsert" [settings]="ddlInsertGroupSettings"
-                          (onSelect)="onClassSelectInsert($event)" (onDeSelect)="onClassDeSelectInsert($event)">
-                        </ng-multiselect-dropdown>
-                        <p *ngIf="reqClassInsertField == false" style="color: red;font-size: 11px;">
-                          Vui lòng chọn dữ liệu lớp!
-                        </p>
+                        <label for="password">Mật khẩu </label>
+                        <input class="form-control" type="text" name="text-input" formControlName="password"
+                          placeholder="Vui lòng nhập Mật khẩu"
+                          [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
+                        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                          <div *ngIf="f.password.errors.required">Mật khẩu không được để trống</div>
+                          <div *ngIf="f.password.errors.minlength">Mật khẩu không được nhỏ hơn 2 ký tự</div>
+                          <div *ngIf="f.password.errors.maxlength">Mật khẩu không được lớn hơn 50 ký tự</div>
+                        </div>
                       </div>
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12">
                       <div class="form-group">
-                        <label for="Group">Ghi chú</label>
-                        <textarea cols="50" rows="5" class="form-control" formControlName="description"
-                          placeholder="Ghi chú"></textarea>
+                        <label for="confirm_password">Xác nhận mật khẩu </label>
+                        <input class="form-control" type="text" name="text-input" formControlName="confirm_password"
+                          placeholder="Vui lòng nhập xác nhận mật khẩu"
+                          [ngClass]="{ 'is-invalid': submitted && f.confirm_password.errors }">
+                        <div *ngIf="submitted && f.confirm_password.errors" class="invalid-feedback">
+                          <div *ngIf="f.confirm_password.errors.required">Xác nhận mật khẩu không được để trống</div>
+                          <div *ngIf="f.confirm_password.errors.minlength">Xác nhận mật khẩu không được nhỏ hơn 2 ký tự
+                          </div>
+                          <div *ngIf="f.confirm_password.errors.maxlength">Xác nhận mật khẩu không được lớn hơn 50 ký tự
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                      <div class="form-group">
+                        <div class="form-check" style="float: right; padding: 2% 0 0 0;" tabindex="8">
+                          <label class="container">
+                            <input type="checkbox" checked="checked" formControlName="statusActive">
+                            <span class="checkmark"></span>Hoạt động
+                          </label>
+                        </div>
                       </div>
                     </div>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
-                    <button type="button" class="btn btn-primary" (click)="addUserGroupConfig()">Thêm</button>
+                    <button type="button" class="btn btn-primary" (click)="addUserAccount()">Thêm</button>
                   </div>
                 </div>
               </div>
@@ -269,85 +299,91 @@
                   <div class="modal-body">
                     <div class="col-lg-12 col-md-12 col-sm-12">
                       <div class="form-group">
-                        <!-- <label for="code">Mã nhóm</label>
-                        <input class="form-control" formControlName="code" type="text" name="text-input" tabindex="12"
-                          placeholder="Vui lòng nhập mã nhóm" [ngClass]="{ 'is-invalid': submitted && f.code.errors }">
-                        <div *ngIf="submitted && f.code.errors" class="invalid-feedback">
-                          <div *ngIf="f.code.errors.required">Mã nhóm không được để trống</div>
-                          <div *ngIf="f.code.errors.minlength">Mã nhóm không được nhỏ hơn 2 ký tự</div>
-                          <div *ngIf="f.code.errors.maxlength">Mã nhóm không được lớn hơn 100 ký tự</div>
-                        </div> -->
+                        <label for="user_name">Tên đăng nhập </label>
+                        <input class="form-control" type="text" name="text-input" formControlName="user_name"
+                          placeholder="Vui lòng nhập tên đăng nhập"
+                          [ngClass]="{ 'is-invalid': submitted && f.user_name.errors }">
+                        <div *ngIf="submitted && f.user_name.errors" class="invalid-feedback">
+                          <div *ngIf="f.user_name.errors.required">Tên đăng nhập không được để trống</div>
+                          <div *ngIf="f.user_name.errors.minlength">Tên đăng nhập không được nhỏ hơn 2 ký tự</div>
+                          <div *ngIf="f.user_name.errors.maxlength">Tên đăng nhập không được lớn hơn 50 ký tự</div>
+                        </div>
                       </div>
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12">
                       <div class="form-group">
-                        <!-- <label for="name">Tên nhóm</label>
-                        <input class="form-control" formControlName="name" type="text" name="text-input" tabindex="13"
-                          placeholder="Vui lòng nhập tên nhóm" [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
-                        <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
-                          <div *ngIf="f.name.errors.required">Tên nhóm không được để trống</div>
-                          <div *ngIf="f.name.errors.minlength">Tên nhóm không được nhỏ hơn 2 ký tự</div>
-                          <div *ngIf="f.name.errors.maxlength">Tên nhóm không được lớn hơn 100 ký tự</div>
-                        </div> -->
+                        <label for="email">Email </label>
+                        <input class="form-control" type="text" name="text-input" formControlName="email"
+                          placeholder="Vui lòng nhập Email" [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+                        <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                          <div *ngIf="f.email.errors.required">Email không được để trống</div>
+                          <div *ngIf="f.email.errors.maxlength">Email không được lớn hơn 100 ký tự</div>
+                          <div *ngIf="f.email.errors.email">Email không hợp lệ</div>
+                        </div>
                       </div>
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12">
                       <div class="form-group">
-                        <!-- <label for="Group">Khối</label>
-                        <ng-multiselect-dropdown #selectGroupUpdate tabindex="14"
-                          [placeholder]="'--- Danh sách khối ---'" [data]="ddlGroupUpdate"
-                          [(ngModel)]="selectedGroupsUpdate" [settings]="ddlUpdateGroupSettings"
-                          (onSelect)="onGroupSelectUpdate($event)" [ngModelOptions]="{standalone: true}"
-                          (onDeSelect)="OnGroupDeSelectUpdate($event)">
-                        </ng-multiselect-dropdown>
-                        <p *ngIf="reqGroupUpdateField == false" style="color: red;font-size: 11px;">
-                          Vui lòng chọn dữ liệu khối!
-                        </p> -->
+                        <div class="form-group">
+                          <label for="group_user">Nhóm</label>
+                          <ng-multiselect-dropdown #selectClassInsert [placeholder]="'--- Danh sách Nhóm ---'" [data]=""
+                            [settings]="ddlInsertGroupSettings" (onSelect)="onGroupSelectInsert($event)"
+                            (onDeSelect)="onGroupDeSelectInsert($event)">
+                          </ng-multiselect-dropdown>
+                          <p *ngIf="reqGroupInsertField == false" style="color: red;font-size: 11px;">
+                            Vui lòng chọn dữ liệu Nhóm!
+                          </p>
+                        </div>
                       </div>
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12">
                       <div class="form-group">
-                        <!-- <label for="class">Lớp</label>
-                        <ng-multiselect-dropdown #selectClassUpdate tabindex="14"
-                          [placeholder]="'--- Danh sách lớp ---'" [data]="ddlClassUpdate"
-                          [(ngModel)]="selectedClassUpdate" [settings]="ddlUpdateGroupSettings"
-                          [ngModelOptions]="{standalone: true}" (onSelect)="onClassSelectUpdate($event)">
-                        </ng-multiselect-dropdown>
-                        <p *ngIf="reqClassUpdateField == false" style="color: red;font-size: 11px;">
-                          Vui lòng chọn dữ liệu khối!
-                        </p> -->
+                        <label for="password">Mật khẩu </label>
+                        <input class="form-control" type="text" name="text-input" formControlName="password"
+                          placeholder="Vui lòng nhập Mật khẩu"
+                          [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
+                        <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                          <div *ngIf="f.password.errors.required">Mật khẩu không được để trống</div>
+                          <div *ngIf="f.password.errors.minlength">Mật khẩu không được nhỏ hơn 2 ký tự</div>
+                          <div *ngIf="f.password.errors.maxlength">Mật khẩu không được lớn hơn 50 ký tự</div>
+                        </div>
                       </div>
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12">
                       <div class="form-group">
-                        <!-- <label for="Group">Ghi chú</label>
-                        <textarea cols="50" rows="5" class="form-control" formControlName="description"
-                          placeholder="Ghi chú"></textarea> -->
+                        <label for="confirm_password">Xác nhận mật khẩu </label>
+                        <input class="form-control" type="text" name="text-input" formControlName="confirm_password"
+                          placeholder="Vui lòng nhập xác nhận mật khẩu"
+                          [ngClass]="{ 'is-invalid': submitted && f.confirm_password.errors }">
+                        <div *ngIf="submitted && f.confirm_password.errors" class="invalid-feedback">
+                          <div *ngIf="f.confirm_password.errors.required">Xác nhận mật khẩu không được để trống</div>
+                          <div *ngIf="f.confirm_password.errors.minlength">Xác nhận mật khẩu không được nhỏ hơn 2 ký tự
+                          </div>
+                          <div *ngIf="f.confirm_password.errors.maxlength">Xác nhận mật khẩu không được lớn hơn 50 ký tự
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12">
                       <div class="form-group">
-                        <!-- <label for="status">Trạng thái</label>
-                        <br>
-                        <label class="checkbox">
-                          <input type="checkbox" formControlName="status" />
-                          <span class="default"></span>
-                        </label> -->
+                        <div class="form-check" style="float: right; padding: 2% 0 0 0;" tabindex="9">
+                          <label class="container">
+                            <input type="checkbox" checked="checked" formControlName="statusActive">
+                            <span class="checkmark"></span>Hoạt động
+                          </label>
+                        </div>
                       </div>
                     </div>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
-                    <button type="button" class="btn btn-primary" (click)="updateUserAccount(userAccountGetById.id)">Cập
-                      nhật</button>
+                    <button type="button" class="btn btn-primary" (click)="updateUserAccount(userAccountGetById.id)">Cập nhật</button>
                   </div>
                 </div>
               </div>
             </div>
             <!-- Cập nhật -->
           </div>
-
-
         </div>
       </div>
     </div>

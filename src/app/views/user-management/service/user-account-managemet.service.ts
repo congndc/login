@@ -18,5 +18,9 @@ searchByKeyWord(search: any) {
       return res;
     }));
 }
+deleteUserAccount(id: number) {
+  return this.http
+ 
+}
 
 }
