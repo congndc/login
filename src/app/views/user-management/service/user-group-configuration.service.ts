@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { map } from 'rxjs/operators';
 
@@ -12,15 +12,15 @@ export class UserGroupConfigurationService {
 
   // Lấy danh sách khối
   listDmKhoi() {
-    return this.http.get<any>(`${environment.apiUrl}/grade/list`)
+    return this.http.post<any>(`${environment.apiUrl}/grade/dropdownlist`, null)
       .pipe(map(res => {
         return res;
       }));
   }
 
   // Lấy danh sách lớp
-  listDmLop() {
-    return this.http.get<any>(`${environment.apiUrl}/class/list`)
+  listDmLop(grade_code, grade_insert) {
+    return this.http.post<any>(`${environment.apiUrl}/class/dropdownlist`, { grade_code, grade_insert })
       .pipe(map(res => {
         return res;
       }));
@@ -28,7 +28,7 @@ export class UserGroupConfigurationService {
 
   // Lấy danh sách cấu hình nhóm người dùng
   listUserGroupConfig() {
-    return this.http.get<any>(`${environment.apiUrl}/group_user_configuration/list`)
+    return this.http.post<any>(`${environment.apiUrl}/group_user_configuration/list`, null)
       .pipe(map(res => {
         return res;
       }));
@@ -58,16 +58,28 @@ export class UserGroupConfigurationService {
   }
 
   // Export file Excel cấu hình nhóm người dùng
-  public exportFile() {
+  public exportFile(search: any, classes: [], grades: [], status: any) {
 
-    this.http.get(`${environment.apiUrl}/group_user_configuration/list?export_files`,
-      { responseType: 'blob' }).subscribe(res => {
-        window.open(window.URL.createObjectURL(res));
-      });
+    if (search) {
+      var export_file = 'export_files';
+      this.http.post(`${environment.apiUrl}/group_user_configuration/list?export_files&search=${search}`, `export_file`,
+        // { 'export_excels'},
+        { responseType: 'blob' as 'json' })
+        .subscribe(res => {
+          window.open(window.URL.createObjectURL(res));
+        });
+    } else {
+      this.http.post(`${environment.apiUrl}/group_user_configuration/list?export_files`,
+        { export_file, classes, grades, status },
+        { responseType: 'blob' as 'json' })
+        .subscribe(res => {
+          window.open(window.URL.createObjectURL(res));
+        });
+    }
   }
 
   // Thêm mới cấu hình nhóm người dùng
-  addUserGroupConfig(code: string, name: string, grade_id: number, class_id: number, description: string) {
+  addUserGroupConfig(code: string, name: string, grade_id: any, class_id: any, description: string) {
     return this.http
       .post<any>(`${environment.apiUrl}/group_user_configuration/create`, { code, name, grade_id, class_id, description })
       .pipe(
@@ -87,9 +99,9 @@ export class UserGroupConfigurationService {
   }
 
   // Cập nhật cấu hình nhóm người dùng
-  updateUserGroupConfig(id: number, code: string, name: string, grade_id: number, class_id: number, description: string) {
+  updateUserGroupConfig(id: number, code: string, name: string, grade_id: number, class_id: number, status: number, description: string) {
     return this.http
-      .put<any>(`${environment.apiUrl}/group_user_configuration/update/${id}`, { code, name, grade_id, class_id, description })
+      .put<any>(`${environment.apiUrl}/group_user_configuration/update/${id}`, { code, name, grade_id, class_id, status, description })
       .pipe(map(res => {
         return res;
       }));
@@ -103,4 +115,27 @@ export class UserGroupConfigurationService {
         return res;
       }));
   }
+
+  // Tìm kiếm cấu hình nhóm người dùng theo mã nhóm và tên nhóm
+  searchByKeyWord(search: any) {
+    return this.http
+      // .get(`${environment.apiUrl}/group_user_configuration/list?search=/${search}')
+      .post<any>(`${environment.apiUrl}/group_user_configuration/list?search=${search}`, null)
+      .pipe(map(res => {
+        return res;
+      }));
+  }
+
+  searchByInput(grades, classes, status) {
+    return this.http.post(`${environment.apiUrl}/group_user_configuration/list`, { grades, classes, status })
+      .pipe(map(res => {
+        return res;
+      }));
+  }
+  // searchByInput(grades: any) {
+  //   return this.http.get(`${environment.apiUrl}/group_user_configuration/list`, { params: { grades: JSON.stringify(grades)}})
+  //      .pipe(map(res => {
+  //     return res;
+  //   }));
+  // }
 }

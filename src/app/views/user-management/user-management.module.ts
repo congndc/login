@@ -12,6 +12,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { UserAccountManagementComponent } from './user-account-management/user-account-management.component';
 
 @NgModule({
   imports: [
@@ -26,11 +28,13 @@ import { NgxPaginationModule } from 'ngx-pagination';
     MatIconModule,
     MatSelectModule,
     UserManagementRoutingModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    NgMultiSelectDropDownModule.forRoot()
   ],
 
   declarations: [
-    UserGroupConfigurationComponent
+    UserGroupConfigurationComponent,
+    UserAccountManagementComponent
   ],
   exports: [
   ], providers: [

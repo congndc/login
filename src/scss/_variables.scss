@@ -1,1 +1,11 @@
-// Variable overrides
+$sidebar-width:                       250px !default;
+
+app-sidebar-nav-link-content{
+    padding-left: 20px
+  }
+  .sidebar .sidebar-nav{
+    width: 250px;
+  }
+  app-sidebar{
+    width: 250px;
+  }

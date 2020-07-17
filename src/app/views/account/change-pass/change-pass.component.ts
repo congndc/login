@@ -45,12 +45,16 @@ export class ChangePassComponent implements OnInit {
       this.notifyService.showWarning('Mật khẩu mới và xác nhận mật khẩu mới không trùng khớp, vui lòng kiểm tra lại!', 'Cảnh báo!');
       return;
     }
+    if (this.f.new_password.value == this.f.old_password.value) {
+      this.notifyService.showWarning('Mật khẩu mới và mật khẩu cũ không trùng khớp, vui lòng kiểm tra lại!', 'Cảnh báo!');
+      return;
+    }
     this.loading = true;
     this.authenticationService.user_update(this.email, this.f.old_password.value, this.f.new_password.value)
       .subscribe(
         (data: any) => {
-          this.notifyService.showSuccess(data.message, 'Thành công!');
-          this.router.navigate(['/dashboard']);
+          this.notifyService.showSuccess(data.message + '. Vui lòng đăng nhập lại!', 'Thành công!');
+          this.authenticationService.logout();
         },
         error => {
           if (error.old_password) {

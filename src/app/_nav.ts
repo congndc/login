@@ -1,15 +1,15 @@
 import { INavData } from '@coreui/angular';
 
 export const navItems: INavData[] = [
-  {
-    name: 'Dashboard',
-    url: '/dashboard',
-    icon: 'icon-speedometer',
-    badge: {
-      variant: 'info',
-      text: 'NEW',
-    },
-  },
+  // {
+  //   name: 'Dashboard',
+  //   url: '/dashboard',
+  //   icon: 'icon-speedometer',
+  //   badge: {
+  //     variant: 'info',
+  //     text: '',
+  //   },
+  // },
   {
     title: true,
     name: 'Quản lý & Thiết lập',
@@ -29,7 +29,7 @@ export const navItems: INavData[] = [
   {
     name: 'Quản lý tài khoản',
     url: '/account',
-    icon: 'icon-puzzle',
+    icon: 'icon-plus',
     children: [
       // {
       //   name: 'Thông tin tài khoản',
@@ -46,11 +46,16 @@ export const navItems: INavData[] = [
   {
     name: 'Quản lý người sử dụng',
     url: '/user-management',
-    icon: 'icon-puzzle',
+    icon: 'icon-plus',
     children: [
       {
         name: 'Cấu hình nhóm người sử dụng',
         url: '/user-management/user-management',
+        icon: 'icon-puzzle',
+      },
+      {
+        name: 'Quản lý tài khoản người dùng',
+        url: '/user-management/user-account-management',
         icon: 'icon-puzzle',
       },
     ],

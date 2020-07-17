@@ -9,7 +9,7 @@
                 <i class="fa fa-cog fa-stack-2x"></i>
                 <i class="fa fa-user-o fa-stack-1x"></i>
               </span>
-              <strong>Cấu hình nhóm người sử dụng</strong>
+              <strong>Quản lý tài khoản người dùng</strong>
             </div>
             <div class="col-md-6" style="text-align: end; padding: 0 3% 0 25%;">
               <div class="form-group has-search" style="margin-bottom: -13px !important; margin-top: 6px;" tabindex="1">
@@ -23,41 +23,28 @@
       </div>
       <div class="card-body">
         <div class="form-group" style="max-width: 100%;
-    max-height: 50%;border:1px solid #80808069;border-radius: 3px; margin-bottom: 1%; padding-top: 1%;">
+      max-height: 50%;border:1px solid #80808069;border-radius: 3px; margin-bottom: 1%; padding-top: 1%;">
           <div class="col-md-12">
-            <div class="row">
+            <div class="row" style="padding: 0 15px;">
 
-              <div class="col-md-4">
+              <div class="col-md-8">
                 <div class="col-md-1 " style="float: left; padding: 2% 0 0 0">
-                  <label for="">Khối</label>
+                  <label for="">Nhóm</label>
                 </div>
-                <div class="col-md-11" style="float: left;">
-                  <ng-multiselect-dropdown #selectGradeSearch tabindex="2" [placeholder]="'--- Danh sách khối ---'"
-                    [data]="dropdownListDmKhoi" [(ngModel)]="selectedDmKhoi" [settings]="dropdownSettings"
-                    (onSelect)="onItemSelect($event)" (onSelectAll)="onSelectAll($event)"
-                    (onDeSelect)="OnItemDeSelect($event)" [ngModelOptions]="{standalone: true}"
-                    (onDeSelectAll)="onItemDeSelectAll($event)">
-                    [formControlName]="gradeSearch"
+                <div class="col-md-11" style="float: left;width: auto;">
+                  <ng-multiselect-dropdown #selectGroupSearch tabindex="2" [placeholder]="'--- Danh sách nhóm ---'"
+                    [data]="" [(ngModel)]="selectedNhom" [settings]="dropdownSettings" (onSelect)="onItemSelect($event)"
+                    (onSelectAll)="onSelectAll($event)" (onDeSelect)="OnItemDeSelect($event)"
+                    [ngModelOptions]="{standalone: true}" (onDeSelectAll)="onItemDeSelectAll($event)">
+                    [formControlName]="groupSearch"
                     >
                   </ng-multiselect-dropdown>
-                  <p *ngIf="requiredGradeSearchField == false" style="color: red;">
-                    Vui lòng chọn dữ liệu khối!
-                  </p>
+                  <!-- <p *ngIf="requiredgroupSearchField == false" style="color: red;">
+                      Vui lòng chọn dữ liệu khối!
+                    </p> -->
                 </div>
               </div>
-              <div class="col-md-4">
-                <div class="col-md-1" style="float: left; padding: 2% 0 0 0;">
-                  <label for="">Lớp</label>
-                </div>
-                <div class="col-md-11" style="float: left; ">
-                  <ng-multiselect-dropdown #selectClassSearch tabindex="3" [placeholder]="'--- Danh sách lớp ---'"
-                    [data]="dropdownListDmLop" [(ngModel)]="selectedDmLop" [settings]="dropdownClassSearchSettings"
-                    (onSelect)="onItemDmLopSelect($event)" [ngModelOptions]="{standalone: true}"
-                    (onSelectAll)="onSelectAllDmLop($event)">
-                  </ng-multiselect-dropdown>
-                </div>
 
-              </div>
               <div class="col-md-2" style="max-width: 100%;">
                 <div class="form-check" style="float: right; padding: 2% 0 0 0;" tabindex="4">
                   <label class="container">
@@ -67,13 +54,13 @@
                 </div>
               </div>
               <!-- <div class="col-md-3" style="max-width: 24%;">
-              <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false"
-                style="float: right;" autocomplete="off" (click)="resetUserGroupConfigForm()">
-
-                <i class="fa fa-refresh" aria-hidden="true"></i> Khởi tạo lại
-              </button>
-          </div> -->
-              <div class="col-md-2" style="max-width: 16%;">
+                <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false"
+                  style="float: right;" autocomplete="off" (click)="resetUserAccountForm()">
+  
+                  <i class="fa fa-refresh" aria-hidden="true"></i> Khởi tạo lại
+                </button>
+            </div> -->
+              <div class="col-md-2" style="max-width: 100%;">
                 <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false"
                   style="float: right;" autocomplete="off" (click)="searchByInput()" tabindex="5">
 
@@ -104,40 +91,40 @@
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <button class="btn btn-success" type="button" data-toggle="modal"
-                    data-target="#addUserGroupConfigurationModal" (click)="resetUserGroupConfigForm()"
-                    style="float: right;margin-bottom: 10px;" tabindex="7">
+                  <button class="btn btn-success" type="button" data-toggle="modal" data-target="#addUserAccountModal"
+                    (click)="resetUserAccountForm()" style="float: right;margin-bottom: 10px;" tabindex="7">
                     <i class="fa fa-plus" aria-hidden="true"></i> Thêm mới
                   </button>
                 </div>
+
               </div>
             </div>
-            <div class="col-lg-12 col-md-12 col-sm-12" style="padding: 0;">
+            <div class="col-lg-12 col-md-12 col-sm-12" style="padding:1% 0 0 0;">
               <div class="col-lg-12 col-md-12 col-sm-12">
-                <table class="table table-responsive-sm table-bordered table-striped table-sm " *ngIf="userConfigData"
+                <table class="table table-responsive-sm table-bordered table-striped table-sm " *ngIf="userAccountData"
                   style="text-align: center; ">
                   <thead>
                     <tr>
                       <th style="width: 5%">STT</th>
-                      <th style="width: 10%">Mã nhóm</th>
-                      <th style="width: 20%">Tên nhóm</th>
-                      <th style="width: 15%">Khối</th>
-                      <th style="width: 10%">Lớp</th>
-                      <th style="width: 15%">Ghi chú</th>
+                      <th style="width: 10%">Mã</th>
+                      <th style="width: 15%">Tên đăng nhập</th>
+                      <th style="width: 20%">Họ tên</th>
+                      <th style="width: 10%">Email</th>
+                      <th style="width: 10%">Nhóm </th>
                       <th style="width: 10%">Trạng thái</th>
                       <th style="width: 20%">Hoạt động</th>
                     </tr>
                   </thead>
-                  <tbody *ngIf="userConfigData">
+                  <tbody *ngIf="userAccountData">
                     <tr
-                      *ngFor="let item of userConfigData | paginate: { itemsPerPage: countPage, currentPage: p, totalItems: totalItems }; let i = index">
+                      *ngFor="let item of userAccountData | paginate: { itemsPerPage: countPage, currentPage: p, totalItems: totalItems }; let i = index">
                       <!-- <td>{{ (p - 1) *countPage + 1 }} - {{ currentPage * itemsPerPage }} of {{  .length }}</td> -->
                       <td style="vertical-align: inherit;"> {{ ( p - 1 ) * countPage + i + 1 }} </td>
                       <td style="vertical-align: inherit;">{{ item.code }}</td>
-                      <td style="vertical-align: inherit;">{{ item.name }}</td>
-                      <td style="vertical-align: inherit;">{{ item.grade_name }}</td>
-                      <td style="vertical-align: inherit;">{{ item.class_name }}</td>
-                      <td style="vertical-align: inherit;">{{ item.description }}</td>
+                      <td style="vertical-align: inherit;">{{ item.user_name }}</td>
+                      <td style="vertical-align: inherit;">{{ item.full_name }}</td>
+                      <td style="vertical-align: inherit;">{{ item.email }}</td>
+                      <td style="vertical-align: inherit;">{{ item.group_user }}</td>
                       <td style="vertical-align: middle;">
                         <ng-template [ngIf]="item.status == 0" [ngIfElse]="notEqual">
                           <!-- <input ng-if="item.status == 0" type="checkbox" name="status" disabled /> -->
@@ -152,12 +139,12 @@
                         <div class="row">
                           <div class="col-md-6" style="margin: 4px;">
                             <button type="button" class="btn btn-primary" data-toggle="modal"
-                              data-target="#editUserGroupConfigurationModal" (click)="getByIdUserGroupConfig(item.id)">
+                              data-target="#editUserAccountModal" (click)="getByIdUserAccount(item.id)">
                               Sửa
                             </button>
                           </div>
                           <div class="col-md-6" style="float: right;margin: 3px -22px;">
-                            <button type="button" class="btn btn-danger" (click)="deleteUserGroupConfig(item.id)">
+                            <button type="button" class="btn btn-danger" (click)="deleteUserAccount(item.id)">
                               Xóa
                             </button>
                           </div>
@@ -165,21 +152,21 @@
                       </td>
                     </tr>
                   </tbody>
-                  <tbody *ngIf="checkUserConfigData === false">
+                  <tbody *ngIf="checkuserAccountData === false">
                     <tr>
                       <td colspan="8"> Dữ liệu không tồn tại
                       </td>
                     </tr>
                   </tbody>
                 </table>
-                <div class="text-right" *ngIf="userConfigData">
+                <div class="text-right" *ngIf="userAccountData">
                   <div class="col-lg-12 col-md-12 col-sm-12">
                     <div class="row">
                       <div class="col-md-6">
                         <div
-                          *ngFor="let item of userConfigData | paginate: { itemsPerPage: countPage, currentPage: p, totalItems: totalItems }; index as i ;last as isLast">
+                          *ngFor="let item of userAccountData | paginate: { itemsPerPage: countPage, currentPage: p, totalItems: totalItems }; index as i ;last as isLast">
                           <p *ngIf="isLast">Hiển thị <span style="font-weight: bold;">{{ (p - 1) * countPage + 1 }} -
-                              {{(p-1)*countPage+i+1}}/{{userConfigData.length}}</span> bản ghi</p>
+                              {{(p-1)*countPage+i+1}}/{{userAccountData.length}}</span> bản ghi</p>
                         </div>
                       </div>
                       <div class="col-md-6">
@@ -191,7 +178,8 @@
                 </div>
               </div>
             </div>
-            <div class="modal fade" id="addUserGroupConfigurationModal" data-keyboard="false" role="dialog"
+            <!-- Thêm mới -->
+            <div class="modal fade" id="addUserAccountModal" data-keyboard="false" role="dialog"
               aria-labelledby="userGroupConfigModalLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -228,13 +216,13 @@
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12">
                       <div class="form-group">
-                        <label for="grade">Khối</label>
-                        <ng-multiselect-dropdown #selectGradeInsert [placeholder]="'--- Danh sách khối ---'"
-                          [data]="ddlGradeInsert" [(ngModel)]="selectedGradesInsert" [settings]="ddlInsertGradeSettings"
-                          (onSelect)="onGradeSelectInsert($event)" [ngModelOptions]="{standalone: true}"
-                          (onDeSelect)="OnGradeDeSelectInsert($event)">
+                        <label for="Group">Khối</label>
+                        <ng-multiselect-dropdown #selectGroupInsert [placeholder]="'--- Danh sách khối ---'"
+                          [data]="ddlGroupInsert" [(ngModel)]="selectedGroupsInsert" [settings]="ddlInsertGroupSettings"
+                          (onSelect)="onGroupSelectInsert($event)" [ngModelOptions]="{standalone: true}"
+                          (onDeSelect)="OnGroupDeSelectInsert($event)">
                         </ng-multiselect-dropdown>
-                        <p *ngIf="reqGradeInsertField == false" style="color: red;font-size: 11px;">
+                        <p *ngIf="reqGroupInsertField == false" style="color: red;font-size: 11px;">
                           Vui lòng chọn dữ liệu khối!
                         </p>
                       </div>
@@ -243,7 +231,7 @@
                       <div class="form-group">
                         <label for="class">Lớp</label>
                         <ng-multiselect-dropdown #selectClassInsert [placeholder]="'--- Danh sách lớp ---'"
-                          [data]="ddlClassInsert" [settings]="ddlInsertGradeSettings"
+                          [data]="ddlClassInsert" [settings]="ddlInsertGroupSettings"
                           (onSelect)="onClassSelectInsert($event)" (onDeSelect)="onClassDeSelectInsert($event)">
                         </ng-multiselect-dropdown>
                         <p *ngIf="reqClassInsertField == false" style="color: red;font-size: 11px;">
@@ -253,7 +241,7 @@
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12">
                       <div class="form-group">
-                        <label for="grade">Ghi chú</label>
+                        <label for="Group">Ghi chú</label>
                         <textarea cols="50" rows="5" class="form-control" formControlName="description"
                           placeholder="Ghi chú"></textarea>
                       </div>
@@ -266,13 +254,14 @@
                 </div>
               </div>
             </div>
-            <div class="modal fade" id="editUserGroupConfigurationModal"
-              [ngStyle]="{display: userConfigGetById ? 'block':'none'}" role="dialog"
-              aria-labelledby="userGroupConfigModalLabel" aria-hidden="true">
+            <!-- Thêm mới -->
+            <!-- Cập nhật -->
+            <div class="modal fade" id="editUserAccountModal" [ngStyle]="{display: userAccountGetById ? 'block':'none'}"
+              role="dialog" aria-labelledby="userAccountModalLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="userGroupConfigModalLabel">Cập nhật</h5>
+                    <h5 class="modal-title" id="userAccountModalLabel">Cập nhật</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
@@ -280,118 +269,85 @@
                   <div class="modal-body">
                     <div class="col-lg-12 col-md-12 col-sm-12">
                       <div class="form-group">
-                        <label for="code">Mã nhóm</label>
+                        <!-- <label for="code">Mã nhóm</label>
                         <input class="form-control" formControlName="code" type="text" name="text-input" tabindex="12"
                           placeholder="Vui lòng nhập mã nhóm" [ngClass]="{ 'is-invalid': submitted && f.code.errors }">
                         <div *ngIf="submitted && f.code.errors" class="invalid-feedback">
                           <div *ngIf="f.code.errors.required">Mã nhóm không được để trống</div>
                           <div *ngIf="f.code.errors.minlength">Mã nhóm không được nhỏ hơn 2 ký tự</div>
                           <div *ngIf="f.code.errors.maxlength">Mã nhóm không được lớn hơn 100 ký tự</div>
-                        </div>
+                        </div> -->
                       </div>
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12">
                       <div class="form-group">
-                        <label for="name">Tên nhóm</label>
+                        <!-- <label for="name">Tên nhóm</label>
                         <input class="form-control" formControlName="name" type="text" name="text-input" tabindex="13"
                           placeholder="Vui lòng nhập tên nhóm" [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
                         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
                           <div *ngIf="f.name.errors.required">Tên nhóm không được để trống</div>
                           <div *ngIf="f.name.errors.minlength">Tên nhóm không được nhỏ hơn 2 ký tự</div>
                           <div *ngIf="f.name.errors.maxlength">Tên nhóm không được lớn hơn 100 ký tự</div>
-                        </div>
+                        </div> -->
                       </div>
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12">
                       <div class="form-group">
-                        <label for="grade">Khối</label>
-                        <ng-multiselect-dropdown #selectGradeUpdate tabindex="14"
-                          [placeholder]="'--- Danh sách khối ---'" [data]="ddlGradeUpdate"
-                          [(ngModel)]="selectedGradesUpdate" [settings]="ddlUpdateGradeSettings"
-                          (onSelect)="onGradeSelectUpdate($event)" [ngModelOptions]="{standalone: true}"
-                          (onDeSelect)="OnGradeDeSelectUpdate($event)">
+                        <!-- <label for="Group">Khối</label>
+                        <ng-multiselect-dropdown #selectGroupUpdate tabindex="14"
+                          [placeholder]="'--- Danh sách khối ---'" [data]="ddlGroupUpdate"
+                          [(ngModel)]="selectedGroupsUpdate" [settings]="ddlUpdateGroupSettings"
+                          (onSelect)="onGroupSelectUpdate($event)" [ngModelOptions]="{standalone: true}"
+                          (onDeSelect)="OnGroupDeSelectUpdate($event)">
                         </ng-multiselect-dropdown>
-                        <p *ngIf="reqGradeUpdateField == false" style="color: red;font-size: 11px;">
+                        <p *ngIf="reqGroupUpdateField == false" style="color: red;font-size: 11px;">
                           Vui lòng chọn dữ liệu khối!
-                        </p>
+                        </p> -->
                       </div>
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12">
                       <div class="form-group">
-                        <label for="class">Lớp</label>
+                        <!-- <label for="class">Lớp</label>
                         <ng-multiselect-dropdown #selectClassUpdate tabindex="14"
                           [placeholder]="'--- Danh sách lớp ---'" [data]="ddlClassUpdate"
-                          [(ngModel)]="selectedClassUpdate" [settings]="ddlUpdateGradeSettings"
+                          [(ngModel)]="selectedClassUpdate" [settings]="ddlUpdateGroupSettings"
                           [ngModelOptions]="{standalone: true}" (onSelect)="onClassSelectUpdate($event)">
                         </ng-multiselect-dropdown>
                         <p *ngIf="reqClassUpdateField == false" style="color: red;font-size: 11px;">
                           Vui lòng chọn dữ liệu khối!
-                        </p>
+                        </p> -->
                       </div>
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12">
                       <div class="form-group">
-                        <label for="grade">Ghi chú</label>
+                        <!-- <label for="Group">Ghi chú</label>
                         <textarea cols="50" rows="5" class="form-control" formControlName="description"
-                          placeholder="Ghi chú"></textarea>
+                          placeholder="Ghi chú"></textarea> -->
                       </div>
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12">
                       <div class="form-group">
-                        <label for="status">Trạng thái</label>
+                        <!-- <label for="status">Trạng thái</label>
                         <br>
                         <label class="checkbox">
                           <input type="checkbox" formControlName="status" />
                           <span class="default"></span>
-                        </label>
+                        </label> -->
                       </div>
                     </div>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
-                    <button type="button" class="btn btn-primary"
-                      (click)="updateUserGroupConfig(userConfigGetById.id)">Cập nhật</button>
+                    <button type="button" class="btn btn-primary" (click)="updateUserAccount(userAccountGetById.id)">Cập
+                      nhật</button>
                   </div>
                 </div>
               </div>
             </div>
+            <!-- Cập nhật -->
           </div>
 
-          <div class="card-footer">
-            <div class="form-group">
-              <form action="" method="POST" enctype="multipart/form-data">
-                <section class="section-preview">
-                  <div class="col-lg-12 col-md-12 col-sm-12">
-                    <div class="row">
 
-                      <div class="col-lg-12 col-md-12 col-sm-12">
-                        <button style="margin-top: -4px;" class="btn btn-primary btn-sm" type="button"
-                          (click)="downloadSampleFile()" tabindex="8">
-                          <i class="fa fa-download"></i> Tải file mẫu
-                        </button>
-                        &nbsp;
-                        <button style="margin-top: -4px;" class="btn btn-primary btn-sm" type="button"
-                          (click)="exportFile();" tabindex="9">
-                          <i class="fa fa-save"></i> Xuất ra tệp
-                        </button>
-                        &nbsp;
-                        <button style="margin-top: -4px;" id="btnImport" class="btn btn-primary btn-sm" type="button"
-                          (click)="importFile();" tabindex="10">
-                          <i class="fa fa-save"></i> Nhập từ tệp
-                        </button>
-                        &nbsp;
-                        <input class="form-control vendor_logo_hide" type="file" #fileInput name="import_excel"
-                          id="Uploadfile" tabindex="11"
-                          accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                          placeholder="Vui lòng chọn file" />
-                        <span class='file_placeholder'>Không có tệp nào được chọn</span>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-              </form>
-            </div>
-          </div>
         </div>
       </div>
     </div>

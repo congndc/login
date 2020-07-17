@@ -17,18 +17,20 @@ export class ErrorInterceptor implements HttpInterceptor {
         const error = err.error.message || err.statusText;
         return throwError(error);
       } else if (err.status === 404) {
-        this.router.navigate(['/404']);
-        // const errors = err.error.message || err.statusText;
-        // return throwError(errors);
+        // this.router.navigate(['/404']);
+        const errors = err.error.message || err.statusText;
+        return throwError(errors);
       } else if (err.status === 422) {
         const errors = err.error || err.status;
         return throwError(errors);
       } else if (err.status === 429) {
-        this.router.navigate(['/404']);
-      } else {
-        const errors = err.error.message || err.status;
-        location.reload(true);
+        // this.router.navigate(['/404']);
+        const errors = err.error.message || err.statusText;
         return throwError(errors);
+      } else {
+        // const errors = err.error.message || err.status;
+        // location.reload(true);
+        // return throwError(errors);
       }
       const error = err.error.message || err.statusText;
       return throwError(error);
