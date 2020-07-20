@@ -25,29 +25,46 @@
         <div class="form-group" style="max-width: 100%;
       max-height: 50%;border:1px solid #80808069;border-radius: 3px; margin-bottom: 1%; padding-top: 1%;">
           <div class="col-md-12">
-            <div class="row" style="padding: 0 15px;">
-              <div class="col-md-4">
+            <div class="row" style="padding: 2% 15px;">
+              <!-- dropdown Đối tượng -->
+              <div class="col-md-4" style="padding: 1% 15px;">
                 <div class="col-md-3 " style="float: left; padding: 2% 0 0 0">
                   <label for="">Đối tượng</label>
                 </div>
                 <div class="col-md-9" style="float: right;padding: 0;">
-                  <ng-multiselect-dropdown #selectGroupSearch tabindex="2" [placeholder]="'--- Danh sách đối tượng ---'"
-                    [data]="" [(ngModel)]="selectedDoiTuong" [settings]="dropdownDoiTuongSettings"
-                    (onSelect)="onItemDoiTuongSelect($event)" (onSelectAll)="onSelectAllDoiTuong($event)"
-                    [ngModelOptions]="{standalone: true}">
+
+                  <!-- đổi [settings] lên [data] -->
+                  <ng-multiselect-dropdown #selectOjectSearch tabindex="2" 
+                  [placeholder]="'--- Danh sách đối tượng ---'"
+                  [(ngModel)]="selectedDoiTuong"
+                  [settings]="dropdownSettings"
+                  [data]="dropdownListDoiTuong"
+                  (onSelect)="onItemSelect($event)"
+                  (onSelectAll)="onSelectAll($event)"
+                  [ngModelOptions]="{standalone: true}" 
+                  >
                   </ng-multiselect-dropdown>                 
                 </div>
               </div>
-              <div class="col-md-4">
+              <!-- dropdown Đối tượng -->
+              <!-- dropdown Nhóm -->  
+              <div class="col-md-4" style="padding: 1% 15px;">
                 <div class="col-md-2 " style="float: left; padding: 2% 0 0 0">
                   <label for="">Nhóm</label>
                 </div>
                 <div class="col-md-10" style="float: left;padding: 0;">
-                  <ng-multiselect-dropdown #selectGroupSearch tabindex="3" [placeholder]="'--- Danh sách nhóm ---'"
-                    [data]="" [(ngModel)]="selectedNhom" [settings]="dropdownSettings" (onSelect)="onItemSelect($event)"
-                    (onSelectAll)="onSelectAll($event)" (onDeSelect)="OnItemDeSelect($event)"
-                    [ngModelOptions]="{standalone: true}" (onDeSelectAll)="onItemDeSelectAll($event)">
-                    [formControlName]="groupSearch"
+                  <ng-multiselect-dropdown #selectGroupSearch tabindex="3" 
+                  [placeholder]="'--- Danh sách nhóm ---'"
+                  [data]="dropdownGroupList" 
+                  [(ngModel)]="selectedGroup" 
+                  [settings]="dropdownGroupSearchSettings" 
+                  (onSelect)="onItemSelectedGroup($event)"
+                  (onSelectAll)="onSelectAll($event)" 
+                  [ngModelOptions]="{standalone: true}"
+                  (onDeSelect)="OnItemDeSelect($event)"
+                  (onDeSelectAll)="onItemDeSelectAll($event)"
+                 >
+                  [formControlName]="groupSearch"
                     >
                   </ng-multiselect-dropdown>
                   <!-- <p *ngIf="requiredGroupSearchField == false" style="color: red;">
@@ -55,8 +72,9 @@
                     </p> -->
                 </div>
               </div>
-
-              <div class="col-md-2" style="max-width: 100%;">
+              <!-- dropdown Nhóm -->
+              <!-- Hoạt Động -->
+              <div class="col-md-2" style="max-width: 100%; padding: 1% 15px;">
                 <div class="form-check" style="float: right; padding: 2% 0 0 0;" tabindex="4">
                   <label class="container">
                     <input type="checkbox" checked="checked" formControlName="statusActive">
@@ -64,34 +82,36 @@
                   </label>
                 </div>
               </div>
+              <!-- Hoạt Động -->
               <!-- <div class="col-md-3" style="max-width: 24%;">
                 <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false"
                   style="float: right;" autocomplete="off" (click)="resetUserAccountForm()">
-  
+
                   <i class="fa fa-refresh" aria-hidden="true"></i> Khởi tạo lại
                 </button>
             </div> -->
-              <div class="col-md-2" style="max-width: 100%;">
+              <!-- Lọc dữ liệu -->
+              <div class="col-md-2" style="max-width: 100%; padding: 1% 15px;">
                 <button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false"
                   style="float: right;" autocomplete="off" (click)="searchByInput()" tabindex="5">
 
                   <i class="fa fa-filter" aria-hidden="true"></i> Lọc dữ liệu
                 </button>
               </div>
+              <!-- Lọc dữ liệu -->
             </div>
           </div>
           <hr style="margin-top: 1%;">
           <div class="col-lg-12 col-md-12 col-sm-12">
-
             <div class="col-md-12">
-              <div class="row">
-
-                <div class="col-md-6">
+              <div class="row" >
+                <!-- Hiển thị -->
+                <div class="col-md-6"style="padding: 1% 15px">  
                   <div class="row">
-                    <div class="col-md-2" style="max-width: 200%;">
+                    <div class="col-md-2" style="max-width: 200%; padding: 2% 0 0 15px;">
                       <span>Hiển thị</span>
                     </div>
-                    <div class="col-md-3" style="margin-right: -50px !important;">
+                    <div class="col-md-3" style="margin-right: -50px !important; ">
                       <select class="form-control" (change)="perPageSelected($event.target.value)" tabindex="6">
                         <option value="10">10</option>
                         <option value="20">20</option>
@@ -99,17 +119,20 @@
                         <option value="100">100</option>
                       </select>
                     </div>
-                  </div>
+                  </div>     
                 </div>
-                <div class="col-md-6">
+                <!-- Hiển thị -->
+                <!-- button thêm -->
+                <div class="col-md-6"style="padding: 1% 15px">
                   <button class="btn btn-success" type="button" data-toggle="modal" data-target="#addUserAccountModal"
                     (click)="resetUserAccountForm()" style="float: right;margin-bottom: 10px;" tabindex="7">
                     <i class="fa fa-plus" aria-hidden="true"></i> Thêm mới
                   </button>
                 </div>
-
+                <!-- button thêm -->
               </div>
             </div>
+            <!-- Table -->
             <div class="col-lg-12 col-md-12 col-sm-12" style="padding:1% 0 0 0;">
               <div class="col-lg-12 col-md-12 col-sm-12">
                 <table class="table table-responsive-sm table-bordered table-striped table-sm " *ngIf="userAccountData"
@@ -129,32 +152,29 @@
                   <tbody *ngIf="userAccountData">
                     <tr
                       *ngFor="let item of userAccountData | paginate: { itemsPerPage: countPage, currentPage: p, totalItems: totalItems }; let i = index">
-                      <!-- <td>{{ (p - 1) *countPage + 1 }} - {{ currentPage * itemsPerPage }} of {{  .length }}</td> -->
                       <td style="vertical-align: inherit;"> {{ ( p - 1 ) * countPage + i + 1 }} </td>
                       <td style="vertical-align: inherit;">{{ item.code }}</td>
-                      <td style="vertical-align: inherit;">{{ item.user_name }}</td>
-                      <td style="vertical-align: inherit;">{{ item.full_name }}</td>
+                      <td style="vertical-align: inherit;">{{ item.username }}</td>
+                      <td style="vertical-align: inherit;">{{ item.fullname }}</td>
                       <td style="vertical-align: inherit;">{{ item.email }}</td>
-                      <td style="vertical-align: inherit;">{{ item.group_user }}</td>
+                      <td style="vertical-align: inherit;">{{ item.group_name }}</td>
                       <td style="vertical-align: middle;">
                         <ng-template [ngIf]="item.status == 0" [ngIfElse]="notEqual">
-                          <!-- <input ng-if="item.status == 0" type="checkbox" name="status" disabled /> -->
                           <span class="badge badge-danger">Không hoạt động</span>
                         </ng-template>
                         <ng-template #notEqual>
-                          <!-- <input ng-if="item.status == 0" type="checkbox" name="status" checked disabled/> -->
                           <span class="badge badge-success">Đang hoạt động</span>
                         </ng-template>
                       </td>
                       <td>
-                        <div class="row" style="padding: 1% 15px;">
-                          <div class="col-md-6">
+                        <div class="row" >
+                          <div class="col-md-6"style="padding: 3% 15px;">
                             <button type="button" class="btn btn-primary" data-toggle="modal"
                               data-target="#editUserAccountModal" (click)="getByIdUserAccount(item.id)">
                               Sửa
                             </button>
                           </div>
-                          <div class="col-md-6">
+                          <div class="col-md-6"style="padding: 3% 15px;">
                             <button type="button" class="btn btn-danger" (click)="deleteUserAccount(item.id)">
                               Xóa
                             </button>
@@ -189,6 +209,7 @@
                 </div>
               </div>
             </div>
+            <!-- Table -->
             <!-- Thêm mới -->
             <div class="modal fade" id="addUserAccountModal" data-keyboard="false" role="dialog"
               aria-labelledby="userGroupConfigModalLabel" aria-hidden="true">
@@ -377,7 +398,7 @@
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
-                    <button type="button" class="btn btn-primary" (click)="updateUserAccount(userAccountGetById.id)">Cập nhật</button>
+                    <button type="button" class="btn btn-primary" (click)="updateUserAccount()">Cập nhật</button>
                   </div>
                 </div>
               </div>

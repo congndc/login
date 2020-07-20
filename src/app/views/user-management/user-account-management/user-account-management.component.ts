@@ -4,6 +4,9 @@ import { UserAccountManagement } from '../../../_models/userAccountManagement';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { UserAccountManagementService } from '../service/user-account-managemet.service';
 import { NotificationService } from '../../../_services/notification.service';
+import { first } from 'rxjs/operators';
+import { exit } from 'process';
+
 declare var $: any;
 @Component({
   selector: 'app-user-account-management',
@@ -19,27 +22,34 @@ export class UserAccountManagementComponent implements OnInit {
   }
   @ViewChild('fileInput') fileInput: ElementRef;
   @ViewChild('selectGroupSearch') selectGroupSearch: ElementRef;
+  @ViewChild('selectOjectSearch') selectOjectSearch: ElementRef;
   @ViewChild('searchByKeyWordInput') searchByKeyWordInput: ElementRef;
   @ViewChild('selectGroupInsert') selectGroupInsert: ElementRef;
   @ViewChild('selectGroupUpdate') selectGroupUpdate: ElementRef;
   userAccountManagement: Observable<UserAccountManagement>;
   form: FormGroup;
-  
-  dropdownListDmKhoi = []; dropdownListDmLop = [];
+  //Khai báo mảng Đối tượng 
+  dropdownListDoiTuong : any=[];
+  selectedDoiTuong = [];
+  // Khai báo mảng Nhóm
+  dropdownGroupList=[];
+  ddlGroupInsert = [];  
+  ddlGroupUpdate = [];
+  selectedGroupsUpdate = [];
 
-  ddlGroupInsert = [];  ddlGroupUpdate = [];selectedGroupsUpdate = [];
-  
+  ddlInsertGroupSettings = {};
+  ddlUpdateGroupSettings = {};
+  selectedGroupsInsert = [];
 
-   ddlInsertGroupSettings = {}; ddlUpdateGroupSettings = {};selectedGroupsInsert = [];
 
-   grades_code = []; grades_code_insert = []; grades_code_update = []; 
-
-  multiSelectGroups = [];
+  onSelectObject = [];
+  onGroupSelectObject = [];
   checkUserConfigData = true;
 
-  dropdownSettings = {}; dropdownGroupSearchSettings={};
+  dropdownSettings = {};
+  dropdownGroupSearchSettings={};
   dropdownDoiTuongSettings={};
-  selectedNhom=[]; selectedDoiTuong=[];
+  selectedGroup=[]; 
   checkUserAccountData =true;
   // Pagination parameters.
   p: number = 1;
@@ -48,10 +58,12 @@ export class UserAccountManagementComponent implements OnInit {
 
 
   submitted = false;
-  // dmKhoiData: any; dmLopData: any; idGrade: number; idClass: number; idUpdate: number;
+  dmNhomData: any;
   userAccountData: any; 
   userAccountGetById: any; // GetById cấu hình người dùng fill lên form update
-  requiredGroupSearchField = true; reqGroupInsertField = true;  reqGroupUpdateField = true;
+  requiredGroupSearchField = true; 
+  reqGroupInsertField = true;  
+  reqGroupUpdateField = true;
   GroupStatus = "false";
 
   constructor(
@@ -64,13 +76,23 @@ export class UserAccountManagementComponent implements OnInit {
   perPageSelected(id: number) {
     this.countPage = id;
   }
-  
+  get statusActive(): any {
+    return this.form.get('statusActive');
+  }
   get f() { return this.form.controls; }
-
+  
   ngOnInit() {
+    // dữ liệu Đối tượng
+    this.dropdownListDoiTuong =[
+      { item_id: 1, item_text: 'Giáo viên' },
+      { item_id: 2, item_text: 'Học sinh' },
+      { item_id: 3, item_text: 'Phụ huynh' },
+    ];
+    
    
+    // setting drop Đối tượng
     this.dropdownSettings = {
-      singleSelection: false,
+      singleSelection: true,
       idField: 'item_id',
       textField: 'item_text',
       selectAllText: 'Chọn tất cả',
@@ -83,13 +105,14 @@ export class UserAccountManagementComponent implements OnInit {
       showSelectedItemsAtTop: false,
       defaultOpen: false
     };
+    //Setting Nhóm
     this.dropdownGroupSearchSettings = {
       singleSelection: false,
       idField: 'item_id',
       textField: 'item_text',
       selectAllText: 'Chọn tất cả',
       unSelectAllText: 'Bỏ chọn tất cả',
-      itemsShowLimit: 2,
+      itemsShowLimit: 1,
       allowSearchFilter: true,
       searchPlaceholderText: 'Tìm kiếm',
       noDataAvailablePlaceholderText: 'Không có dữ liệu',
@@ -111,15 +134,42 @@ export class UserAccountManagementComponent implements OnInit {
       groupSearch: new FormControl('', [Validators.required]),
     });
    
+    this.userAccountManagementService.listNhom()
+    .pipe(first())
+    .subscribe(
+      (data) => {
+        this.dmNhomData = data['groups'];
+        const dmNhomObj = []
+        this.dmNhomData.forEach(function (item) {
+          dmNhomObj.push({ 'item_id': item['id'], 'item_text': item['name'] })
+        })
+      
+        this.dropdownGroupList = dmNhomObj;
+      });
+  
+  
+}
+onItemSelectedGroup(item: any){
+  const objects = [];
+  const index = this.onGroupSelectObject.indexOf(event["item_id"]);
+    if (index > -1) {
+      objects.splice(index, 1);
+    }else{
+      objects.push(item["item_id"]);
+    }
+    this.onGroupSelectObject = objects;
+}
+  onItemSelect(item: any) {
+  
+    const objects = [];
+    const index = this.onSelectObject.indexOf(event["item_id"]);
+      if (index > -1) {
+        objects.splice(index, 1);
+      }else{
+        objects.push(item["item_id"]);
+      }
+      this.onSelectObject = objects;
     
-  
-  
-}
-onItemDoiTuongSelect(items: any){
-
-}
-  onItemSelect(items: any) {
-   
   }
   OnItemDeSelect(event: Event) {
    
@@ -136,18 +186,39 @@ onItemDoiTuongSelect(items: any){
   OnGroupDeSelectUpdate(item: any) {
     
   }
-  onSelectAllDoiTuong(items:any){
-
+  onSelectAllNhom(items:any){
+    
   }
   onSelectAll(items: any) {
-  
+    // this.selectGroupSearch['selectedItems'] = [];
+    const group = [];
+    const group_id=[];
+    console.log(items);
+    items.forEach(function (item) {
+      group.push(item['item_id']);
+    })
+    group_id.push({'groups':group});
+    this.onGroupSelectObject = group;// push lên onGroupSelectObject để lọc
+    this.userAccountManagementService.listNhom()
+      .subscribe(
+        (data) => {
+          this.dmNhomData = data['groups'];
+          const groupObj = []
+          this.dmNhomData.forEach(function (item) {
+            groupObj.push({ 'item_id': item['id'], 'item_text': item['name'] })
+          })
+          this.dropdownGroupList = groupObj;
+        },
+        error => {
+          return false;
+        });
+   
+    
   }
   onSubmit(){
 
   }
-  onItemDmLopSelect(item: any) {
-   
-  }
+
 
   onGroupDeSelectInsert(item: any) {
   
@@ -158,9 +229,7 @@ onItemDoiTuongSelect(items: any){
   onGroupDeSelectUpdate(item: any) {
    
   }
-  onSelectAllDmLop(items: any) {
-   
-  }
+
 
   searchByKeyWord(search) {
     this.userAccountData = [];
@@ -193,202 +262,33 @@ onItemDoiTuongSelect(items: any){
     }
   }
 
-  searchByInput() {
-    this.userAccountData = [
-      
-        {
-        code: '1',
-        user_name: 'admin1',
-        full_name: 'Nguyen1',
-        email: 'nguyen1@gmail.com',
-        group_user: 'Nhóm 1',
-        },
-        {
-        code: '2',
-        user_name: 'admin2',
-        full_name: 'Nguyen2',
-        email: 'nguyen2@gmail.com',
-        group_user: 'Nhóm 2',
-        },
-        {
-        code: '3',
-        user_name: 'admin3',
-        full_name: 'Nguyen3',
-        email: 'nguyen3@gmail.com',
-        group_user: 'Nhóm 3',
-        },
-        {
-        code: '4',
-        user_name: 'admin4',
-        full_name: 'Nguyen4',
-        email: 'nguyen43@gmail.com',
-        group_user: 'Nhóm 4',
-        },
-        {
-        code: '5',
-        user_name: 'admin5',
-        full_name: 'Nguyen5',
-        email: 'nguyen5@gmail.com',
-        group_user: 'Nhóm 5',
-        },
-        {
-        code: '6',
-        user_name: 'admin6',
-        full_name: 'Nguyen6',
-        email: 'nguyen6@gmail.com',
-        group_user: 'Nhóm 6',
-        },
-        {
-        code: '7',
-        user_name: 'admin7',
-        full_name: 'Nguyen7',
-        email: 'nguyen7@gmail.com',
-        group_user: 'Nhóm 7',
-        },
-        {
-        code: '8',
-        user_name: 'admin8',
-        full_name: 'Nguyen8',
-        email: 'nguyen8@gmail.com',
-        group_user: 'Nhóm 8',
-        },
-        {
-        code: '9',
-        user_name: 'admin9',
-        full_name: 'Nguyen9',
-        email: 'nguyen9@gmail.com',
-        group_user: 'Nhóm 9',
-        },
-        {
-        code: '10',
-        user_name: 'admin10',
-        full_name: 'Nguyen10',
-        email: 'nguyen10@gmail.com',
-        group_user: 'Nhóm 10',
-        },
-        {
-        code: '11',
-        user_name: 'admin11',
-        full_name: 'Nguyen11',
-        email: 'nguyen11@gmail.com',
-        group_user: 'Nhóm 11',
-        },
-        {
-        code: '12',
-        user_name: 'admin12',
-        full_name: 'Nguyen12',
-        email: 'nguyen12@gmail.com',
-        group_user: 'Nhóm 12',
-        },
-        {
-        code: '13',
-        user_name: 'admin13',
-        full_name: 'Nguyen13',
-        email: 'nguyen13@gmail.com',
-        group_user: 'Nhóm 13',
-        },
-        {
-        code: '14',
-        user_name: 'admin14',
-        full_name: 'Nguyen14',
-        email: 'nguyen14@gmail.com',
-        group_user: 'Nhóm 14',
-        },
-        {
-        code: '15',
-        user_name: 'admin15',
-        full_name: 'Nguyen15',
-        email: 'nguyen15@gmail.com',
-        group_user: 'Nhóm 15',
-        },
-        {
-        code: '16',
-        user_name: 'admin16',
-        full_name: 'Nguyen16',
-        email: 'nguyen16@gmail.com',
-        group_user: 'Nhóm 16',
-        },
-        {
-        code: '17',
-        user_name: 'admin17',
-        full_name: 'Nguyen17',
-        email: 'nguyen17@gmail.com',
-        group_user: 'Nhóm 17',
-        },
-        {
-        code: '18',
-        user_name: 'admin18',
-        full_name: 'Nguyen18',
-        email: 'nguyen18@gmail.com',
-        group_user: 'Nhóm 18',
-        },
-        {
-        code: '19',
-        user_name: 'admin19',
-        full_name: 'Nguyen19',
-        email: 'nguyen19@gmail.com',
-        group_user: 'Nhóm 19',
-        },
-        {
-        code: '20',
-        user_name: 'admin20',
-        full_name: 'Nguyen20',
-        email: 'nguyen20@gmail.com',
-        group_user: 'Nhóm 20',
-        },
-        {
-        code: '21',
-        user_name: 'admin21',
-        full_name: 'Nguyen21',
-        email: 'nguyen21@gmail.com',
-        group_user: 'Nhóm 21',
-        },
-        {
-        code: '22',
-        user_name: 'admin22',
-        full_name: 'Nguyen22',
-        email: 'nguyen22@gmail.com',
-        group_user: 'Nhóm 22',
-        },
-        {
-        code: '23',
-        user_name: 'admin23',
-        full_name: 'Nguyen23',
-        email: 'nguyen23@gmail.com',
-        group_user: 'Nhóm 23',
-        },
-        {
-        code: '24',
-        user_name: 'admin24',
-        full_name: 'Nguyen24',
-        email: 'nguyen24@gmail.com',
-        group_user: 'Nhóm 24',
-        },
-        {
-        code: '25',
-        user_name: 'admin25',
-        full_name: 'Nguyen25',
-        email: 'nguyen25@gmail.com',
-        group_user: 'Nhóm 25',
-        },
-        {
-        code: '26',
-        user_name: 'admin26',
-        full_name: 'Nguyen26',
-        email: 'nguyen26@gmail.com',
-        group_user: 'Nhóm 26',
-        },
-        {
-        code: '27',
-        user_name: 'admin27',
-        full_name: 'Nguyen27',
-        email: 'nguyen27@gmail.com',
-        group_user: 'Nhóm 27',
-        },
-       
-      
-    ];
-
+  searchByInput(id: number) {
+    this.userAccountData=[];
+    let selectObject = this.onSelectObject;
+    let GroupSelectObject = this.onGroupSelectObject;
+    if (this.statusActive.value) {
+      status = 'active';
+    } else {
+      status = 'inactive';
+    }
+    this.userAccountManagementService.searchByInput(selectObject, GroupSelectObject, status)
+    .subscribe(
+      result=>{
+        if (result['count'] == 0) {
+          this.notifyService.showError('Không tìm thấy dữ liệu', 'Thông báo lỗi');
+        } else {
+          this.userAccountData = result['users'];
+          this.totalItems = result['count'];
+        }
+        this.ngOnDestroy();
+      },
+      error => {
+        Object.keys(error).forEach(function (key) {
+          this.notifyService.showError(error[key], 'Thông báo lỗi');
+        });
+        this.ngOnDestroy();
+      });
+    
   }
 
   // Thêm mới cấu hình nhóm người sử dụng
@@ -465,6 +365,7 @@ onItemDoiTuongSelect(items: any){
       //     });
     }
   }
+  
 
 
   // Refresh

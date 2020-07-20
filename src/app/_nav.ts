@@ -26,23 +26,23 @@ export const navItems: INavData[] = [
   //     },
   //   ],
   // },
-  {
-    name: 'Quản lý tài khoản',
-    url: '/account',
-    icon: 'icon-plus',
-    children: [
-      // {
-      //   name: 'Thông tin tài khoản',
-      //   url: '/account/account-information',
-      //   icon: 'icon-puzzle',
-      // },
-      {
-        name: 'Thay đổi mật khẩu',
-        url: '/account/change-pass',
-        icon: 'icon-puzzle',
-      },
-    ],
-  },
+  // {
+  //   name: 'Quản lý tài khoản',
+  //   url: '/account',
+  //   icon: 'icon-plus',
+  //   children: [
+  //     // {
+  //     //   name: 'Thông tin tài khoản',
+  //     //   url: '/account/account-information',
+  //     //   icon: 'icon-puzzle',
+  //     // },
+  //     {
+  //       name: 'Thay đổi mật khẩu',
+  //       url: '/account/change-pass',
+  //       icon: 'icon-puzzle',
+  //     },
+  //   ],
+  // },
   {
     name: 'Quản lý người sử dụng',
     url: '/user-management',

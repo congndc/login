@@ -12,7 +12,6 @@ export class UserAccountManagementService {
 // Tìm kiếm cấu hình nhóm người dùng theo mã nhóm và tên nhóm
 searchByKeyWord(search: any) {
   return this.http
-    // .get(`${environment.apiUrl}/group_user_configuration/list?search=/${search}')
     .post<any>(`${environment.apiUrl}/group_user_configuration/list?search=${search}`, null)
     .pipe(map(res => {
       return res;
@@ -22,5 +21,22 @@ deleteUserAccount(id: number) {
   return this.http
  
 }
+//list danh sách dropdown
+searchByInput(selectObject: any, GroupSelectObject: any, status ){
+  return this.http
+      .get<any>(`${environment.apiUrl}/user/list?object=${selectObject}&?groups=${GroupSelectObject}`)
+      .pipe(map(res => {
+        return res;
+      }));
+}
+//list danh sách dropdown
 
+//list danh sách nhóm
+listNhom() {
+  return this.http.get<any>(`${environment.apiUrl}/group/dropdownlist`)
+    .pipe(map(res => {
+      return res;
+    }));
+}
+//list danh sách nhóm
 }

@@ -79,4 +79,13 @@ export class AuthenticationService {
         })
       );
   }
+  getAccountInformation() {
+    return this.http
+      .get<any>(`${environment.apiUrl}/user/show_infor_user`)
+      .pipe(
+        map((data) => {
+          return data;
+        })
+      );
+  }
 }
