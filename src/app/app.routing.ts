@@ -109,6 +109,10 @@ export const routes: Routes = [
         path: 'user-management',
         loadChildren: () => import('./views/user-management/user-management.module').then(m => m.UserManagementModule)
       },
+      {
+        path: 'configuration-information',
+        loadChildren: () => import('./views/configuration-information/configuration-information.module').then(m => m.ConfiguationInformationModule)
+      },
     ]
   },
   { path: '**', component: P404Component }

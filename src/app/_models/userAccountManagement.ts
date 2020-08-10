@@ -8,5 +8,7 @@ export class UserAccountManagement {
   status: boolean;
   group_name:string;
   fullname:string;
+  dob:string;
+  phone: string;
+  address: string;
   }
-  

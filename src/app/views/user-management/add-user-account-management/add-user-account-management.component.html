@@ -1,0 +1,286 @@
+<div class="col-lg-12 col-md-12 col-sm-12">
+  <div class="card">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+      <div class="card-header">
+        <span class="fa-stack">
+          <i class="fa fa-user-plus fa-stack-2x"></i>
+        </span>
+        <strong style="padding: 10px;">Thêm tài khoản người sử dụng</strong>
+      </div>
+      <div class="card-body">
+        <!--Ảnh-->
+        <div class="form-group col-md-3" style="float: right;">
+          <div class="form-group col-md-12" style="text-align: center;">
+            <ng-template [ngIf]="imgURL" [ngIfElse]="imgURLNull">
+              <img [src]="imgURL" height="234" *ngIf="imgURL" style="width:70%; position:relative;margin-bottom: 9%;;">
+            </ng-template>
+            <ng-template #imgURLNull>
+              <img src="assets/img/avatars/avatar.png" alt="Avatar" style="width:70%; position:relative;margin-bottom: 9%;;">
+            </ng-template>
+            <div style="position:relative; margin-left: 5%;">
+              <a class='btn btn-primary' href='javascript:;'>
+                  Chọn ảnh
+                  <input type="file" #fileInput accept='image/*' (change)="preview(fileInput.files)" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="file_source" size="40"  onchange='$("#upload-file-info").html($(this).val());'>
+              </a>
+              &nbsp;
+            </div>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <div class="row">
+            <!---Left-Content-->
+              <div class="col-md-6" style="margin-bottom: auto;">
+                <div class="form-group row">
+                  <div class="col-md-6">
+                    <label for="username">Tên đăng nhập <span style="color: red; font-size: large;"></span></label>
+                    <input class="form-control" type="text" name="text-input" formControlName="username"
+                      placeholder="Vui lòng nhập tên đăng nhập" disabled>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="email">Email <span style="color: red; font-size: large;">*</span></label>
+                  <input class="form-control" type="text" name="text-input" formControlName="email"
+                    placeholder="Vui lòng nhập Email" [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+                  <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                    <div *ngIf="f.email.errors.required">Email không được để trống</div>
+                    <div *ngIf="f.email.errors.maxlength">Email không được lớn hơn 100 ký tự</div>
+                    <div *ngIf="f.email.errors.email">Email không hợp lệ</div>
+                  </div>
+                  </div>
+              </div>
+              <div class="form-group row"  style="margin-bottom: 0;">
+                <div class="form-group col-md-8" >
+                  <label for="code" style="width: 100%;">Thông tin hồ sơ<span style="color: red; font-size: large;"></span></label>
+                  <ng-multiselect-dropdown #selectLinkProfile tabindex="2"
+                  [placeholder]="'Danh sách hồ sơ'"
+                  [settings]="ddlLinkProfileSettings"
+                  [data]="ddlLinkProfileData"
+                  [(ngModel)]="selectedLinkProfile"
+                  (onSelect)="onSelectLinkProfile($event)"
+                  (onDeSelect)="onDeSelectLinkProfile($event)"
+                  >
+                  </ng-multiselect-dropdown>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="code">Mã hồ sơ <span style="color: red; font-size: large;"></span></label>
+                <input class="form-control" type="text" name="text-input" formControlName="code"
+                  placeholder="" [ngClass]="{ 'is-invalid': submitted && f.code.errors }">
+                  <div *ngIf="submitted && f.code.errors" class="invalid-feedback">
+                    <div *ngIf="f.code.errors.minlength">Họ và tên không được nhỏ hơn 2 ký tự</div>
+                    <div *ngIf="f.code.errors.maxlength">Họ và tên không được lớn hơn 50 ký tự</div>
+                  </div>
+              </div>
+            </div>
+                <!--Quyền truy cập-->
+                <div class="form-group">
+                  <label for="">Quyền truy cập hệ thống <span style="color: red; font-size: large;">*</span></label>
+                    <ng-multiselect-dropdown #selectPermission tabindex="2"
+                    [placeholder]="'Danh sách quyền'"
+                    [(ngModel)]="selectedPermission"
+                    [settings]="ddlPermissionSettings"
+                    [data]="ddlPermissionData"
+                    (onSelect)="onSelectPermission($event)"
+                    (onDeSelect)="onDeSelectPermission($event)"
+                    [ngModelOptions]="{standalone: true}"
+                    >
+                    </ng-multiselect-dropdown>
+                    <p *ngIf="requiredPermission == false" style="color: #f86c6b;font-size: 11px; margin-bottom: -1px;">
+                      Vui lòng chọn quyền truy cập hệ thống
+                    </p>
+                </div>
+                <!--Nhóm người sd-->
+                <div class="form-group">
+                  <label for="group_user">Nhóm người sử dụng <span style="color: red; font-size: large;"></span></label>
+                  <ng-multiselect-dropdown #selectUserGroup
+                    [placeholder]="'Danh sách nhóm người sử dụng'"
+                    [data]="ddlUserGroupData"
+                    [(ngModel)]="selectedUserGroup"
+                    [ngModelOptions]="{standalone: true}"
+                    [settings]="ddlGroupUserSettings"
+                    (onSelect)="onUserGroupSelect($event)"
+                    (onDeSelect)="onUserGroupDeSelect($event)"
+                    (onSelectAll)="onUserGroupSelectAll($event)"
+                    (onDeSelectAll)="onUserGroupDeSelectAll($event)">
+                  </ng-multiselect-dropdown>
+                </div>
+              </div>
+            <!--Right-Content-->
+              <div class="col-md-6">
+                <!--Họ và tên-->
+                <div class="form-group">
+                  <label for="fullname">Họ và tên <span style="color: red; font-size: large;">*</span></label>
+                  <input class="form-control" type="text" name="text-input" formControlName="fullname"
+                    placeholder="Vui lòng nhập họ và tên" [ngClass]="{ 'is-invalid': submitted && f.fullname.errors }">
+                  <div *ngIf="submitted && f.fullname.errors" class="invalid-feedback">
+                    <div *ngIf="f.fullname.errors.required">Họ và tên không được để trống</div>
+                    <div *ngIf="f.fullname.errors.minlength">Họ và tên không được nhỏ hơn 6 ký tự</div>
+                    <div *ngIf="f.fullname.errors.maxlength">Họ và tên không được lớn hơn 100 ký tự</div>
+                  </div>
+                </div>
+                <!--Số ĐT-->
+                <!-- <div class="form-group">
+                  <label for="phone">Số điện thoại <span style="color: red; font-size: large;"></span></label>
+                  <input class="form-control" type="text" name="text-input" formControlName="phone"
+                    placeholder="Vui lòng nhập số điện thoại" [ngClass]="{ 'is-invalid': submitted && f.phone.errors }">
+                    <div *ngIf="submitted && f.phone.errors" class="invalid-feedback">
+                      <div *ngIf="f.phone.errors.pattern">Số điện thoại không đúng định dạng</div>
+                    </div>
+                </div> -->
+                <div class="form-group col-md-6" style="padding: 0%;">
+                  <label>Số điện thoại:</label>
+                    <ngx-intl-tel-input
+                      cssClass='form-control'
+                      [preferredCountries]="['vn']"
+                      [onlyCountries]="['vn']"
+                      [enableAutoCountrySelect]="false"
+                      [enablePlaceholder]="true"
+                      [searchCountryFlag]="false"
+                      [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+                      [selectFirstCountry]="false"
+                      [maxLength]="15"
+                      [selectedCountryISO]="CountryISO.Vietnam"
+                      [tooltipField]="TooltipLabel.Name"
+                      [phoneValidation]="true"
+                      [inputId]="phone"
+                      searchCountryPlaceholder='Tìm kiếm quốc gia'
+                      name="phone"
+                      formControlName="phone"
+                    ></ngx-intl-tel-input>
+                </div>
+                <!-- <pre>{{form.value|json}}</pre>
+                <button (click)="click()">Onclick</button> -->
+                <!--Ngày sinh & Giới tính-->
+                <div class="form-group row">
+                    <div class="col-md-6">
+                      <label for="dob">Ngày sinh <span style="color: red; font-size: large;">*</span></label>
+                      <input class="form-control" id="date-input" type="date" name="date-input" formControlName="dob"
+                      placeholder="dob" [ngClass]="{ 'is-invalid': submitted && f.dob.errors }">
+                      <div *ngIf="submitted && f.dob.errors" class="invalid-feedback">
+                        <div *ngIf="f.dob.errors.required">Ngày sinh không được để trống</div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="email">Giới tính <span style="color: red; font-size: large;">*</span></label>
+                      <ng-multiselect-dropdown #selectGender tabindex="2"
+                        [placeholder]="'Giới tính'"
+                        [(ngModel)]="selectedGender"
+                        [settings]="ddlGenderSettings"
+                        [data]="ddlGenderData"
+                        (onSelect)="onSelectGender($event)"
+                        (onDeSelect)="onDeSelectGender($event)"
+                        [ngModelOptions]="{standalone: true}"
+                        >
+                      </ng-multiselect-dropdown>
+                      <p *ngIf="requiredGender == false" style="color: #f86c6b;font-size: 11px;">
+                        Vui lòng chọn giới tính!
+                      </p>
+                    </div>
+                </div>
+                <!--End-Ngày sinh & Giới tính-->
+                <!--Địa chỉ-->
+                <div class="form-group" style="padding-top:0.9%;">
+                  <label for="address">Địa chỉ </label>
+                  <input class="form-control" type="text" name="text-input" formControlName="address">
+                </div>
+              </div>
+          </div>
+          <!-- </div> -->
+        </div>
+        <!--------------------->
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-9">
+              <div class="row">
+                <div class="col-md-3">
+                  <!--Mật khẩu-->
+                  <label for="password">Mật khẩu <span style="color: red; font-size: large;">*</span></label>
+                  <input class="form-control" type="password" name="text-input" formControlName="password"
+                    placeholder="Vui lòng nhập Mật khẩu"
+                    [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
+                  <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                    <div *ngIf="f.password.errors.required">Mật khẩu không được để trống</div>
+                    <div *ngIf="f.password.errors.minlength">Mật khẩu không được nhỏ hơn 6 ký tự</div>
+                    <div *ngIf="f.password.errors.maxlength">Mật khẩu không được lớn hơn 100 ký tự</div>
+                  </div>
+                  <!--End-Mật khẩu-->
+                </div>
+                <div class="col-md-3">
+                  <!--Xác nhận Mk-->
+                  <label for="confirm_password">Xác nhận mật khẩu <span style="color: red; font-size: large;">*</span></label>
+                  <input class="form-control" type="password" name="text-input" formControlName="confirm_password"
+                    placeholder="Xác nhận mật khẩu"
+                    [ngClass]="{ 'is-invalid': submitted && f.confirm_password.errors }">
+                  <div *ngIf="submitted && f.confirm_password.errors" class="invalid-feedback">
+                    <div *ngIf="f.confirm_password.errors.required">Xác nhận mật khẩu không được để trống</div>
+                    <div *ngIf="f.confirm_password.errors.minlength">Xác nhận mật khẩu không được nhỏ hơn 6 ký tự</div>
+                    <div *ngIf="f.confirm_password.errors.maxlength">Xác nhận mật khẩu không được lớn hơn 100 ký tự</div>
+                    <div *ngIf="f.confirm_password.errors.mustMatch">Mật khẩu không trùng khớp</div>
+                  </div>
+                </div>
+                <!--Tỉnh-->
+                <div class="col-md-3">
+                    <label for="email">Tỉnh/Thành phố <span style="color: red; font-size: large;"></span></label>
+                    <ng-multiselect-dropdown #selectProvince tabindex="2"
+                      [placeholder]="'Tỉnh/Thành phố'"
+                      [(ngModel)]="selectedProvince"
+                      [settings]="ddlProvinceSettings"
+                      [data]="ddlProvinceData"
+                      (onSelect)="onSelectProvince($event)"
+                      (onDeSelect)="onDeSelectProvince($event)"
+                      [ngModelOptions]="{standalone: true}"
+                      >
+                    </ng-multiselect-dropdown>
+                </div>
+                <!--Quận-Huyện-->
+                <div class="col-md-3">
+                  <label for="email">Quận/Huyện <span style="color: red; font-size: large;"></span></label>
+                  <ng-multiselect-dropdown #selectDistrict tabindex="2"
+                    [placeholder]="'Quận/Huyện'"
+                    [(ngModel)]="selectedDistrict"
+                    [settings]="ddlDistrictSettings"
+                    [data]="ddlDistrictData"
+                    (onSelect)="onSelectDistrict($event)"
+                    (onDeSelect)="onDeSelectDistrict($event)"
+                    [ngModelOptions]="{standalone: true}"
+                    >
+                  </ng-multiselect-dropdown>
+                </div>
+              </div>
+            </div>
+            <!--left-->
+            <div class="col-md-3">
+              <label for="email">Phường/Xã <span style="color: red; font-size: large;"></span></label>
+              <ng-multiselect-dropdown #selectWard tabindex="2"
+                [placeholder]="'Phường/Xã'"
+                [(ngModel)]="selectedWard"
+                [settings]="ddlWardSettings"
+                [data]="ddlWardData"
+                (onSelect)="onSelectWard($event)"
+                (onDeSelect)="onDeSelectWard($event)"
+                [ngModelOptions]="{standalone: true}"
+                >
+              </ng-multiselect-dropdown>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer" style="padding: 1rem 2.25rem 4rem 1rem !important;">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="row" style="float: right; margin-top: 6px;">
+              <label  class="container" style="padding: 0px 4px;margin-top: 6px;margin-right: 0px;width: 84px;">
+                <input type="checkbox" formControlName="multiAdd">
+                <span class="checkmark"></span>Thêm nhiều
+              </label>
+            <button class="col-lg-12 col-md-12 col-sm-12 " class="btn btn-primary" type="submit">
+              <i class="fa fa-floppy-o"></i>&nbsp;Lưu lại
+            </button>
+            &nbsp;
+            <button class="col-lg-12 col-md-12 col-sm-12 " class="btn btn-danger" (click)="goBack()">
+              <i class="fa fa-ban"></i>&nbsp;Hủy
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <!-- <pre>{{formAdd.value | json}}</pre> -->
+  </div>
+</div>

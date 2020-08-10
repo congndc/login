@@ -24,8 +24,7 @@
 
       // Insert button after input file element
       var button = $(
-          '<input type="button" value="' + options.text + '" class="' + options.buttonClass + '" />'
-          ).insertAfter(this);
+          '<input type="button" value="' + options.text + '" class="' + options.buttonClass + '" />'          ).insertAfter(this);
 
       // Insert text after button element
       var text = $(

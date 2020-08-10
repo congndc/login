@@ -10,6 +10,7 @@ import { count, first } from 'rxjs/operators';
 import index from "@angular/cdk/schematics/ng-add";
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { clear } from 'console';
 
 declare var $: any;
 
@@ -43,12 +44,17 @@ export class UserGroupConfigurationComponent implements OnInit {
 
   grades_code = []; grades_code_insert = []; class_code_insert = []; grades_code_update = []; class_code_update = [];
 
-  dropdownSettings = {};  dropdownClassSearchSettings = {}; ddlInsertGradeSettings = {}; ddlUpdateGradeSettings = {};
+  dropdownSettings = {};  dropdownClassSearchSettings = {}; ddlInsertGradeSettings = {}; ddlUpdateGradeSettings = {}; ddlUpdateClassSettings ={};
 
   grade_code = []; class_code = []; selectedDmKhoi = []; selectedDmLop = []; selectedGradesInsert = [];
 
+  descriptionValue: any;
   multiSelectGrades = [];
   checkUserConfigData = true;
+
+  ddNameGroup: any;
+  ddCodeGroup: any;
+  checkStatus : any;
 
   // Pagination parameters.
   p: number = 1;
@@ -56,11 +62,13 @@ export class UserGroupConfigurationComponent implements OnInit {
   totalItems = 0;
 
   submitted = false;
-  dmKhoiData: any; dmLopData: any; idGrade: number; idClass: number; idUpdate: number;
-  userConfigData: any; userConfigGetById: any; // GetById cấu hình người dùng fill lên form update
+  dmKhoiData: any; dmLopData: any; idGrade: any; idClass: any; idUpdate: number;
+  userConfigData: any; userConfigGetById: any; // GetById cấu hình người sử dụng fill lên form update
 
   requiredGradeSearchField = true; reqGradeInsertField = true; reqClassInsertField = true; reqGradeUpdateField = true; reqClassUpdateField = true;
   gradeStatus = "false";
+
+  headerUserGroupConfig = false;
 
   constructor(
     private fb: FormBuilder,
@@ -80,23 +88,23 @@ export class UserGroupConfigurationComponent implements OnInit {
   classIdSelected(id: number) {
     this.idClass = id;
   }
-  // Lấy mã khối cấu hình nhóm người dùng
+  // Lấy mã khối cấu hình nhóm người sử dụng
   get code(): any {
     return this.form.get('code');
   }
-  // Lấy tên lớp cấu hình nhóm người dùng
+  // Lấy tên lớp cấu hình nhóm người sử dụng
   get name(): any {
     return this.form.get('name');
   }
-  // Lấy id khối cấu hình nhóm người dùng
+  // Lấy id khối cấu hình nhóm người sử dụng
   get grade_id(): any {
     return this.form.get('grade_id');
   }
-  // Lấy id  lớp cấu hình nhóm người dùng
+  // Lấy id  lớp cấu hình nhóm người sử dụng
   get class_id(): any {
     return this.form.get('class_id');
   }
-  // Lấy mô tả cấu hình nhóm người dùng
+  // Lấy mô tả cấu hình nhóm người sử dụng
   get description(): any {
     return this.form.get('description');
   }
@@ -130,7 +138,10 @@ export class UserGroupConfigurationComponent implements OnInit {
         //  show file name
         if ($("#Uploadfile").val().length > 0) {
           $(".file_placeholder").empty();
+          $(".file_placeholder").remove();
           $('#Uploadfile').removeClass('vendor_logo_hide').addClass('vendor_logo');
+          $("Uploadfile").remove();
+
         } else {
           // show select company logo
           // $('#Uploadfile').removeClass('vendor_logo').addClass('vendor_logo_hide');
@@ -150,7 +161,7 @@ export class UserGroupConfigurationComponent implements OnInit {
       textField: 'item_text',
       selectAllText: 'Chọn tất cả',
       unSelectAllText: 'Bỏ chọn tất cả',
-      itemsShowLimit: 1,
+      itemsShowLimit: 2,
       allowSearchFilter: true,
       searchPlaceholderText: 'Tìm kiếm',
       noDataAvailablePlaceholderText: 'Không có dữ liệu',
@@ -200,16 +211,31 @@ export class UserGroupConfigurationComponent implements OnInit {
       showSelectedItemsAtTop: false,
       defaultOpen: false
     };
+    this.ddlUpdateClassSettings = {
+      singleSelection: true,
+      idField: 'item_id',
+      textField: 'item_text',
+      selectAllText: 'Chọn tất cả',
+      unSelectAllText: 'Bỏ chọn tất cả',
+      itemsShowLimit: 1,
+      allowSearchFilter: true,
+      closeDropDownOnSelection: true,
+      searchPlaceholderText: 'Tìm kiếm',
+      noDataAvailablePlaceholderText: 'Không có dữ liệu',
+      showSelectedItemsAtTop: false,
+      defaultOpen: false
+    };
 
     // Validate form
     this.form = this.fb.group({
-      code: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]),
-      name: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]),
+      code: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]),
+      name: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]),
       description: new FormControl(''),
       status: new FormControl(''),
       statusActive: new FormControl(true),
+      checkBox : new FormControl(this.checkStatus),
       gradeSearch: new FormControl('', [Validators.required]),
-      classSearch: new FormControl('', [Validators.required])
+      classSearch: new FormControl('', [Validators.required]),
     });
 
     // Get danh mục khối
@@ -221,7 +247,7 @@ export class UserGroupConfigurationComponent implements OnInit {
           const dmKhoiObj = []
           const dmKhoiInsertObj = []
           this.dmKhoiData.forEach(function (item) {
-            dmKhoiObj.push({ 'item_id': item['code'], 'item_text': item['name'] })
+            dmKhoiObj.push({ 'item_id': item['id'], 'item_text': item['name'] })
           })
           this.dmKhoiData.forEach(function (item) {
             dmKhoiInsertObj.push({ 'item_id': item['id'], 'item_text': item['name'] })
@@ -232,26 +258,47 @@ export class UserGroupConfigurationComponent implements OnInit {
         });
 
   }
+  //chọn 1 khối
   onItemSelect(items: any) {
-    this.selectClassSearch['selectedItems'] = [];
+    const arrayGrade = this.multiSelectGrades;
     const grade_codes = [];
-    if (this.multiSelectGrades.indexOf(items["item_id"]) === -1) {
-      this.multiSelectGrades.push(items["item_id"]);
+    if (arrayGrade.length === 0) {
+      arrayGrade.push(items['item_id']);
+      grade_codes.push({ 'grades': arrayGrade });
     } else {
-      for (var i = this.multiSelectGrades.length - 1; i--;) {
-        if (this.multiSelectGrades[i] === this.multiSelectGrades["item_id"]) this.multiSelectGrades[0].splice(i, 1);
-      }
-    }
-    grade_codes.push({ "grades": this.multiSelectGrades });
-    this.grade_code = grade_codes;
+      if (arrayGrade[0]['grades'] === undefined) {
+        const index = arrayGrade.indexOf(items['item_id']);
+        if (index > -1) {
+          arrayGrade.splice(index, 1);
+        } else {
+          arrayGrade.push(items['item_id']);
+        }
+        grade_codes.push({ 'grades': arrayGrade[0]['grades'] });
+      } else {
+        const index = arrayGrade[0]['grades'].indexOf(items['item_id']);
+        if (index > -1) {
+          arrayGrade[0]['grades'].splice(index, 1);
+        } else {
+          arrayGrade[0]['grades'].push(items['item_id']);
+        }
+        grade_codes.push({ 'grades': arrayGrade[0]['grades'] });
 
-    this.userGroupConfigurationService.listDmLop(grade_codes[0], this.gradeStatus)
+      }
+      this.multiSelectGrades = grade_codes;
+
+    }
+    this.multiSelectGrades = grade_codes;
+    this.grade_code = grade_codes;
+    let selectGrade = [];
+    selectGrade = grade_codes[0]['grades'];
+
+    this.userGroupConfigurationService.listDmLop(selectGrade)
       .subscribe(
         (data) => {
           this.dmLopData = data;
           const dmLopObj = []
           this.dmLopData.forEach(function (grades) {
-            dmLopObj.push({ 'item_id': grades['code'], 'item_text': grades['name'] });
+            dmLopObj.push({ 'item_id': grades['id'], 'item_text': grades['name'] });
           })
           this.dropdownListDmLop = dmLopObj;
         },
@@ -259,40 +306,47 @@ export class UserGroupConfigurationComponent implements OnInit {
           return false;
         });
   }
-  OnItemDeSelect(event: Event) {
+  //bỏ chọn 1 khối
+  OnItemDeSelect(item: any) {
     this.selectClassSearch['selectedItems'] = [];
     const arrayGrade = this.multiSelectGrades;
     const arrayAfterUnselect = [];
-    if(this.multiSelectGrades[0]['grades'] != undefined){
-      const index = arrayGrade[0]['grades'].indexOf(event["item_id"]);
+    if (arrayGrade[0] !== undefined) {
+      const index = arrayGrade[0]['grades'].indexOf(item['item_id']);
       if (index > -1) {
         arrayGrade[0]['grades'].splice(index, 1);
+      } else {
+        arrayGrade[0]['grades'].push(item['item_id']);
       }
-      arrayAfterUnselect.push({ "grades": arrayGrade[0]['grades'] });
-      this.grade_code = arrayAfterUnselect;
-    }else{
-      const index = arrayGrade.indexOf(event["item_id"]);
-      if (index > -1) {
-        arrayGrade.splice(index, 1);
-      }
-      arrayAfterUnselect.push({ "grades": arrayGrade });
-      this.grade_code = arrayAfterUnselect;
-    }
+      arrayAfterUnselect.push({ 'grades': arrayGrade[0]['grades'] });
 
-    this.userGroupConfigurationService.listDmLop(arrayAfterUnselect[0], this.gradeStatus)
+    }
+    this.multiSelectGrades = arrayAfterUnselect;
+    let deSelectGrade = [];
+    deSelectGrade = arrayAfterUnselect[0]['grades'];
+
+    this.userGroupConfigurationService.listDmLop(deSelectGrade)
       .subscribe(
         (data) => {
+          // onClassSelectObject
           this.dmLopData = data;
-          const dmLopObj = []
+          const dmLopObj = [];
+          const getArrayAfterDe = [];
+          var i = 0;
           this.dmLopData.forEach(function (grades) {
-            dmLopObj.push({ 'item_id': grades['code'], 'item_text': grades['name'] });
+            dmLopObj.push({ 'item_id': grades['id'], 'item_text': grades['name'] });
+            getArrayAfterDe.push(dmLopObj[i]['item_id']);
+            i++;
           })
+          this.onClassSelectObject= getArrayAfterDe;
           this.dropdownListDmLop = dmLopObj;
+          // this.rememberClassId = getArrayAfterDe;
         },
         error => {
           return false;
         });
   }
+  //bỏ chọn tất cả Khối
   onItemDeSelectAll(items: any) {
     this.selectClassSearch['selectedItems'] = [];
     const arrayAfterUnselect = [];
@@ -307,13 +361,15 @@ export class UserGroupConfigurationComponent implements OnInit {
     }
     arrayAfterUnselect.push({ "grades": arrayGrades });
     this.grade_code = arrayAfterUnselect;
-    this.userGroupConfigurationService.listDmLop(arrayAfterUnselect[0], this.gradeStatus)
+    let deSelectAllGrade = [];
+    deSelectAllGrade = arrayAfterUnselect[0]['grades'];
+    this.userGroupConfigurationService.listDmLop(deSelectAllGrade)
       .subscribe(
         (data) => {
           this.dmLopData = data;
           const dmLopObj = []
           this.dmLopData.forEach(function (item) {
-            dmLopObj.push({ 'item_id': item['code'], 'item_text': item['name'] })
+            dmLopObj.push({ 'item_id': item['id'], 'item_text': item['name'] })
           })
           this.dropdownListDmLop = dmLopObj;
         },
@@ -329,7 +385,7 @@ export class UserGroupConfigurationComponent implements OnInit {
     this.gradeStatus = "true";
     grade_codes.push(item["item_id"]);
     this.grades_code_insert = grade_codes[0];
-    this.userGroupConfigurationService.listDmLop(grade_codes, this.gradeStatus)
+    this.userGroupConfigurationService.listDmLop(grade_codes)
       .subscribe(
         (data) => {
           this.dmLopData = data;
@@ -358,7 +414,7 @@ export class UserGroupConfigurationComponent implements OnInit {
       arrayAfterUnselect.push(arrayGrade);
     }
     this.grades_code_insert = arrayAfterUnselect;
-    this.userGroupConfigurationService.listDmLop(arrayAfterUnselect, this.gradeStatus)
+    this.userGroupConfigurationService.listDmLop(arrayAfterUnselect)
       .subscribe(
         (data) => {
           this.dmLopData = data;
@@ -375,11 +431,12 @@ export class UserGroupConfigurationComponent implements OnInit {
   onGradeSelectUpdate(item: any) {
     this.reqGradeUpdateField = true;
     this.selectClassUpdate['selectedItems'] = [];
+    this.class_code_update = [];
     this.gradeStatus = "true";
     const grade_codes = [];
     grade_codes.push(item["item_id"]);
     this.grades_code_update = grade_codes;
-    this.userGroupConfigurationService.listDmLop(grade_codes, this.gradeStatus)
+    this.userGroupConfigurationService.listDmLop(grade_codes)
       .subscribe(
         (data) => {
           this.dmLopData = data;
@@ -396,50 +453,54 @@ export class UserGroupConfigurationComponent implements OnInit {
   OnGradeDeSelectUpdate(item: any) {
     this.reqClassUpdateField = true;
     this.selectClassUpdate['selectedItems'] = [];
-    const arrayGrade = this.grades_code_update;
-    const arrayAfterUnselect = [];
-    const index = arrayGrade.indexOf(item['item_id']);
-    if (index > -1) {
-      arrayGrade.splice(index, 1);
-    }
-    if (arrayGrade.length == 0) {
-      arrayAfterUnselect.push(0);
-    } else {
-      arrayAfterUnselect.push(arrayGrade);
-    }
-    this.grades_code_update = arrayAfterUnselect;
-    this.userGroupConfigurationService.listDmLop(arrayAfterUnselect, this.gradeStatus)
-      .subscribe(
-        (data) => {
-          this.dmLopData = data;
-          const dmLopObj = []
-          this.dmLopData.forEach(function (grades) {
-            dmLopObj.push({ 'item_id': grades['id'], 'item_text': grades['name'] })
-          })
-          this.ddlClassUpdate = dmLopObj;
-        },
-        error => {
-          return false;
-        });
+    this.grades_code_update = [];
+    this.class_code_update = [];
+    // const arrayGrade = this.grades_code_update;
+    // const arrayAfterUnselect = [];
+    // const index = arrayGrade.indexOf(item['item_id']);
+    // if (index > -1) {
+    //   arrayGrade.splice(index, 1);
+    // }
+    // if (arrayGrade.length == 0) {
+    //   arrayAfterUnselect.push(0);
+    // } else {
+    //   arrayAfterUnselect.push(arrayGrade);
+    // }
+    // this.grades_code_update = arrayAfterUnselect;
+    // this.userGroupConfigurationService.listDmLop(arrayAfterUnselect)
+    //   .subscribe(
+    //     (data) => {
+    //       this.dmLopData = data;
+    //       const dmLopObj = []
+    //       this.dmLopData.forEach(function (grades) {
+    //         dmLopObj.push({ 'item_id': grades['id'], 'item_text': grades['name'] })
+    //       })
+    //       this.ddlClassUpdate = dmLopObj;
+    //     },
+    //     error => {
+    //       return false;
+    //     });
   }
+  //chọn tất cả khối
   onSelectAll(items: any) {
-    this.selectClassSearch['selectedItems'] = [];
     const grade = [];
     const grade_codes = [];
     items.forEach(function (item) {
       grade.push(item['item_id']);
     })
-    grade_codes.push({ "grades": grade });
+    grade_codes.push({'grades': grade});
     this.grade_code = grade_codes;
     this.multiSelectGrades = grade_codes;
     this.dropdownListDmLop = [];
-    this.userGroupConfigurationService.listDmLop(grade_codes[0], this.gradeStatus)
+    let selectAllGrade = [];
+    selectAllGrade = grade_codes[0]['grades'];
+    this.userGroupConfigurationService.listDmLop(selectAllGrade)
       .subscribe(
         (data) => {
           this.dmLopData = data;
           const dmLopObj = []
           this.dmLopData.forEach(function (item) {
-            dmLopObj.push({ 'item_id': item['code'], 'item_text': item['name'] })
+            dmLopObj.push({ 'item_id': item['id'], 'item_text': item['name'] })
           })
           this.dropdownListDmLop = dmLopObj;
         },
@@ -450,10 +511,41 @@ export class UserGroupConfigurationComponent implements OnInit {
   onSubmit(){
 
   }
+  //chọn 1 Lớp
+  rememberClassId=[];
   onItemDmLopSelect(item: any) {
-    const classCode = [];
+    const classCode = this.rememberClassId;
     classCode.push(item['item_id']);
     this.class_code = classCode;
+    this.rememberClassId = classCode;
+    // this.onClassSelectObject = classCode
+  }
+  //bỏ chọn 1 Lớp
+  OnItemDeSelectClass(item: any){
+    const classCode = this.rememberClassId;
+    if (classCode[0] !== undefined) {
+      const index = classCode.indexOf(item['item_id']);
+      if(index > -1)
+      {
+        classCode.splice(index, 1);
+      }else{
+        classCode.push(item['item_id']);
+      }
+    }
+
+    this.class_code = classCode;
+
+  }
+  //bỏ chọn tất cả Lớp
+  onItemDeSelectAllClass(items: any){
+    this.selectClassSearch['selectedItems'] = [];
+    const allClassCode = this.onClassSelectObject;
+    const arrayAfterUnselect = [];
+    items.forEach(function (items) {
+      allClassCode.push(items['item_id']);
+    });
+    arrayAfterUnselect.push({ 'groups': allClassCode });
+    this.onClassSelectObject = [];
   }
   onClassSelectInsert(item: any) {
     this.reqClassInsertField = true;
@@ -463,19 +555,26 @@ export class UserGroupConfigurationComponent implements OnInit {
     this.reqClassInsertField = false;
     this.class_code_insert = [];
   }
+  //chọn lớp khi sửa
   onClassSelectUpdate(item: any) {
     this.reqClassUpdateField = true;
+    const class_code_updated = [];
+    this.class_code_update = class_code_updated;
     this.class_code_update.push(item['item_id']);
+    // this.class_code = class_code_updated;
   }
+  //Bỏ chọn lớp khi sửa
   onClassDeSelectUpdate(item: any) {
     this.reqClassUpdateField = false;
     this.class_code_update.push(item['item_id']);
   }
+  //chọn tất cả Lớp
   onSelectAllDmLop(items: any) {
-    const classCode = [];
+    const classCode =[];
     items.forEach(function (item) {
       classCode.push(item['item_id'])
     })
+    this.onClassSelectObject =classCode;
     this.class_code = classCode;
   }
 
@@ -483,24 +582,27 @@ export class UserGroupConfigurationComponent implements OnInit {
     this.userConfigData = [];
     // this.requiredGradeSearchField = true;
     if (search.trim() === "") {
+      // this.checkUserConfigData = false;
       this.notifyService.showError('Vui lòng điền từ khóa tìm kiếm!', 'Thông báo lỗi');
+      this.totalItems =1;
+      this.p =1;
     } else {
       this.userGroupConfigurationService.searchByKeyWord(search)
         .subscribe(
           result => {
+            this.headerUserGroupConfig = true;
             if (result.count != 0) {
-              this.totalItems = 1;
-              this.p = 1;
               this.userConfigData = [];
               this.checkUserConfigData = true;
               this.userConfigData = result['group_user_configuration'];
               this.totalItems = result['count'];
               this.notifyService.showSuccess('Đã tìm thấy ' + result.count + ' bản gi dữ liệu', 'Thông báo');
-            } else {
-              this.totalItems = 1;
               this.p = 1;
+            } else {
               this.userConfigData = [];
               this.checkUserConfigData = false;
+              this.totalItems = 1;
+              this.p = 1;
             }
             this.ngOnDestroy();
           },
@@ -511,40 +613,56 @@ export class UserGroupConfigurationComponent implements OnInit {
     }
   }
 
+//lọc dữ liệu
+onClassSelectObject =[]
   searchByInput() {
+
     this.userConfigData = [];
-    // if (this.grade_code.length <= 0) {
-    //   this.requiredGradeSearchField = false;
-    //   return;
-    // } else {
-    //   this.requiredGradeSearchField = true;
-    // }
+
+    let selectObject = this.multiSelectGrades;
+    let classSelectObject = this.class_code;
+    let grades_code;
+    let class_codes= [];
+    if (classSelectObject.length > 0) {
+      class_codes = classSelectObject[0]['classes'];
+    } else {
+      class_codes = [];
+    }
+    if (selectObject.length > 0) {
+      grades_code = selectObject[0]['grades'];
+    } else {
+      grades_code = [];
+    }
     let status;
-    const class_code = [];
-    const class_codes = [];
-    this.class_code.forEach(function (item) {
-      class_code.push(item);
-    })
-    class_codes.push({ "classes": class_code });
-    const grades_code = [];
-    this.grade_code.forEach(function (item) {
-      grades_code.push(item);
-    })
     if (this.statusActive.value) {
       status = 'active';
     } else {
       status = 'inactive';
     }
-    this.userGroupConfigurationService.searchByInput(grades_code[0], class_codes[0], status)
+    this.userGroupConfigurationService.searchByInput(grades_code, classSelectObject, status)
       .subscribe(
         result => {
-          if (result['count'] == 0) {
+          if (result['count'] === 0) {
+            this.p = 1;
+            this.totalItems = 1;
+            this.headerUserGroupConfig = true;
+            this.checkUserConfigData = false;
             this.notifyService.showError('Không tìm thấy dữ liệu', 'Thông báo lỗi');
           } else {
+            this.headerUserGroupConfig = true;
+            this.checkUserConfigData = true;
+            // let arrayData = [];
+            // let arrayItem = [];
+            // arrayData = result['group_user_configuration'];
+            // arrayData.forEach(function(item){
+            //   arrayItem.push({id: item['id'], name: item['name'], code: item['code'], grade_name: item['grades_name'], class_name: item['class_name'], description: item['description'], status: item['status']});
+            // })
             this.userConfigData = result['group_user_configuration'];
+
             this.totalItems = result['count'];
+            this.p = 1;
           }
-          this.ngOnDestroy();
+          // this.ngOnDestroy();
         },
         error => {
           Object.keys(error).forEach(function (key) {
@@ -556,40 +674,48 @@ export class UserGroupConfigurationComponent implements OnInit {
 
   // Thêm mới cấu hình nhóm người sử dụng
   addUserGroupConfig() {
-    this.description.value = '',
+    this.form.get('code').setValidators([Validators.required, Validators.minLength(2), Validators.maxLength(100)]);
+    this.form.get('code').updateValueAndValidity();
+    this.form.get('name').setValidators([Validators.required, Validators.minLength(6), Validators.maxLength(100)]);
+    this.form.get('name').updateValueAndValidity();
     this.selectGradeInsert['selectedItems'] = [];
     this.selectClassInsert['selectedItems'] = [];
     this.submitted = true;
-    if (this.form.controls['code'].invalid || this.form.controls['name'].invalid) {
-      return;
-    }
+    // if (this.form.controls['code'].invalid || this.form.controls['name'].invalid) {
+    //   if (this.grades_code_insert.length <= 0 || this.class_code_insert.length <= 0) {
+    //     this.reqGradeInsertField = false;
+    //     this.reqClassInsertField = false;
+    //   }
+    //   return;
+    // }
 
-    if ((this.form.controls['code'].value == null || this.form.controls['code'].value == '') && (this.form.controls['name'].value == null || this.form.controls['name'].value == '')) {
-      if (this.grades_code_insert.length <= 0 || this.class_code_insert.length <= 0) {
-        this.reqGradeInsertField = false;
-        this.reqClassInsertField = false;
-      }
-      return;
-    } else if (this.grades_code_insert.length <= 0 || this.class_code_insert.length <= 0) {
-      this.reqGradeInsertField = false;
-      this.reqClassInsertField = false;
-      return;
-    }
-    else {
-      this.reqGradeInsertField = true;
-      this.reqClassInsertField = true;
-    }
+    // if ((this.form.controls['code'].value == null || this.form.controls['code'].value == '') && (this.form.controls['name'].value == null || this.form.controls['name'].value == '')) {
+    //   if (this.grades_code_insert.length <= 0 || this.class_code_insert.length <= 0) {
+    //     this.reqGradeInsertField = false;
+    //     this.reqClassInsertField = false;
+    //   }
+    //   return;
+    // } else if (this.grades_code_insert.length <= 0 || this.class_code_insert.length <= 0) {
+    //   this.reqGradeInsertField = false;
+    //   this.reqClassInsertField = false;
+    //   return;
+    // }
+    // else {
+    //   this.reqGradeInsertField = true;
+    //   this.reqClassInsertField = true;
+    // }
 
     this.userGroupConfigurationService.addUserGroupConfig(
       this.code.value,
       this.name.value,
       this.grades_code_insert,
       this.class_code_insert,
-      this.description.value,
+      this.description.value
     ).subscribe(
       result => {
         $('#addUserGroupConfigurationModal').modal('hide');
         this.notifyService.showSuccess('Dữ liệu (' + result.code + ' - ' + result.name + ') đã được thêm thành công', 'Thông báo');
+        this.searchByInput();
         this.ngOnDestroy();
       },
       error => {
@@ -606,39 +732,50 @@ export class UserGroupConfigurationComponent implements OnInit {
   }
   // Cập nhật cấu hình nhóm người sử dụng
   updateUserGroupConfig(id: number) {
-    this.form.get('code').setValidators([Validators.required, Validators.minLength(2), Validators.maxLength(50)]);
-    this.form.get('code').updateValueAndValidity();
-    this.form.get('name').setValidators([Validators.required, Validators.minLength(2), Validators.maxLength(50)]);
+    // let checked = this.form.controls['checkBox'].value;
+    this.form.get('name').setValidators([Validators.required, Validators.minLength(6), Validators.maxLength(50)]);
     this.form.get('name').updateValueAndValidity();
     this.submitted = true;
-    if (this.form.controls['code'].invalid || this.form.controls['name'].invalid) {
+    if ( this.form.controls['name'].invalid) {
       return;
     }
-    if ((this.form.controls['code'].value == null || this.form.controls['code'].value == '') && (this.form.controls['name'].value == null || this.form.controls['name'].value == '')) {
-      if (this.grades_code_insert.length <= 0 || this.class_code_insert.length <= 0) {
-        this.reqGradeUpdateField = false;
-        this.reqClassUpdateField = false;
-      }
-      return;
-    } else if (this.grades_code_update.length <= 0 || this.class_code_update.length <= 0) {
-      this.reqGradeUpdateField = false;
-      this.reqClassUpdateField = false;
-      return;
+    // if ((this.form.controls['code'].value == null || this.form.controls['code'].value == '') && (this.form.controls['name'].value == null || this.form.controls['name'].value == '')) {
+    //   if (this.grades_code_insert.length <= 0 || this.class_code_insert.length <= 0) {
+    //     this.reqGradeUpdateField = false;
+    //     this.reqClassUpdateField = false;
+    //   }
+    //   return;
+    // } else if (this.grades_code_update.length <= 0 || this.class_code_update.length <= 0) {
+    //   this.reqGradeUpdateField = false;
+    //   this.reqClassUpdateField = false;
+    //   return;
+    // }
+    // else {
+    //   this.reqGradeUpdateField = true;
+    //   this.reqClassUpdateField = true;
+    // }
+    if (this.grades_code_update.length === 0) {
+      this.idGrade = '';
     }
     else {
-      this.reqGradeUpdateField = true;
-      this.reqClassUpdateField = true;
-    }
-    if (this.grades_code_update) {
       this.idGrade = this.grades_code_update[0];
-    } else {
-      this.idGrade = this.userConfigGetById.grade_id
     }
-    if (this.class_code_update) {
+    if (this.class_code_update.length === 0) {
+      this.idClass = '';
+    }
+    else {
       this.idClass = this.class_code_update[0];
-    } else {
-      this.idClass = this.userConfigGetById.class_id
     }
+    if (this.form.controls['checkBox'].value) {
+      var status =1;
+    } else {
+      var status = 0;
+    }
+    // if (this.status.value === true){
+    //   var status = 1;
+    // }else{
+    //   var status = 0;
+    // }
 
     // Call API cập nhật cấu hình nhóm người sử dụng
     this.userGroupConfigurationService.updateUserGroupConfig(
@@ -647,7 +784,7 @@ export class UserGroupConfigurationComponent implements OnInit {
       this.name.value,
       this.idGrade,
       this.idClass,
-      this.status.value,
+      status,
       this.description.value
     ).subscribe(
       result => {
@@ -699,12 +836,60 @@ export class UserGroupConfigurationComponent implements OnInit {
     this.userGroupConfigurationService.getByIdUserGroupConfig(id)
       .subscribe(
         result => {
+          let checkBox = result['status'];
+          if(checkBox === 1){
+           this.checkStatus =true;
+          }
+          else{
+            this.checkStatus =false;
+          }
+          let groupCode = result['code'];
+          this.ddCodeGroup = groupCode;
+
+          let groupName = result['name'];
+          this.ddNameGroup =  groupName;
+
+          let descriptionShow = result['description'];
+          this.descriptionValue = descriptionShow;
+          let id_grade = result['grade_id'];
+          const arr = this.ddlGradeUpdate;
+          const arrId = [];
+          arr.forEach(function(item){
+            arrId.push(item['item_id'])
+          })
+          let position = arrId.indexOf(id_grade);
+          const value = arr[position];
           this.userConfigGetById = result;
-          this.selectedGradesUpdate = [{ item_id: result.grade_id, item_text: "" + result.grade_name + "" }];
+          let valueID = value['item_id'];
+          let gradesValue = value['item_text'];
+          this.selectedGradesUpdate = [{ item_id: valueID, item_text: "" + gradesValue + "" }];
           this.grades_code_update.push(result.grade_id);
-          this.selectedClassUpdate = [{ item_id: result.class_id, item_text: "" + result.class_name + "" }];
-          this.class_code_update.push(result.class_id);
-          this.form.patchValue(result);
+
+          this.userGroupConfigurationService.listDmLop([id_grade])
+          .pipe()
+          .subscribe(
+            (data)=>{
+              let classData = data;
+              const arrClass = [];
+              classData.forEach(function(item)
+              {
+                arrClass.push({'item_id': item['id'], 'item_text': item['name']});
+              })
+              this.ddlClassUpdate = arrClass;
+               let classId = result['class_id'];
+               const arrayClassId = [];
+                this.ddlClassUpdate.forEach( function(item){
+                arrayClassId.push(item['item_id']);
+               });
+               let positionClass = arrayClassId.indexOf(classId);
+              let valueClass = this.ddlClassUpdate[positionClass];
+              let valueClassId = valueClass['item_id'];
+              let valueClassName = valueClass['item_text'];
+              this.selectedClassUpdate=[{item_id: valueClassId, item_text:""+ valueClassName + ""}];
+              this.class_code_update.push(result.class_id);
+            }
+          );
+          // this.form.patchValue(result);
           this.ngOnDestroy();
         },
         error => {
@@ -747,13 +932,13 @@ export class UserGroupConfigurationComponent implements OnInit {
       .subscribe(
         result => {
           this.fileInput.nativeElement.value = null;
-          this.notifyService.showSuccess(result.message + '. Bạn có thể tìm kiếm dữ liệu dựa vào công cụ tìm kiếm', 'Thành công');
+          this.notifyService.showSuccess(result.message + ' Bạn có thể tìm kiếm dữ liệu dựa vào công cụ tìm kiếm', 'Thành công');
           this.ngOnDestroy();
         },
         error => {
           if (error.messages != undefined) {
             if (error.messages.import_excel !== undefined) {
-              this.notifyService.showError(error.messages.import_excel[0] + ' - ', 'Thông báo lỗi');
+              this.notifyService.showError(error.messages.import_excel[0], 'Thông báo lỗi');
             } else if (error.messages.name) {
               this.notifyService.showError(error.messages["name"] + ' - ' + error.position, 'Thông báo lỗi');
             } else if (error.messages.grade_id) {
@@ -811,6 +996,298 @@ export class UserGroupConfigurationComponent implements OnInit {
       this.userGroupConfigurationService.exportFile(searchVal, class_codes[0], grades_codes[0], status);
     }
   }
+  // timesId = 1;
+  // sortCode(event) {
+  //   const array = this.userConfigData;
+  //   if (this.timesId === 1) {
+  //     array.sort(function (a, b) {
+  //       let str = a.code
+  //       var nameA = Number(str) // bỏ qua hoa thường
+  //       let str2 = b.code;
+  //       var nameB = Number(str2); // bỏ qua hoa thường
+  //       if (nameA < nameB) {
+  //         return -1;
+  //       }
+  //       if (nameA > nameB) {
+  //         return 1;
+  //       }
+  //       // name trùng nhau
+  //       return 0;
+  //     });
+  //     this.timesId++;
+  //   } else {
+  //     array.reverse(function (a, b) {
+  //       let str = a.code;
+  //       var nameA = Number(str); // bỏ qua hoa thường
+  //       let str2 = b.code;
+  //       var nameB = Number(str2); // bỏ qua hoa thường
+  //       if (nameA < nameB) {
+  //         return -1;
+  //       }
+  //       if (nameA > nameB) {
+  //         return 1;
+  //       }
+  //       // name trùng nhau
+  //       return 0;
+  //     });
+  //     this.timesId = 1
+  //   }
+  //   this.userConfigData = array;
+  // }
+  timesCode =1;
+  sortCode(){ 
+    const array = this.userConfigData;
+    if(this.timesCode===1){
+      array.sort(function (a, b) {
+        let str = a.code; 
+        str = str.replace(/\s+/g, ' ');
+        // loại bỏ toàn bộ dấu space (nếu có) ở 2 đầu của chuỗi
+        str = str.trim();
+        // bắt đầu xóa dấu tiếng việt  trong chuỗi
+        str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+        str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+        str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+        str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+        str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+        str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+        str = str.replace(/đ/g, "d");
+        str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
+        str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
+        str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
+        str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
+        str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
+        str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
+        str = str.replace(/Đ/g, "D");
+
+        // var A = this.loc_xoa_dau(a.fullname);
+        // var B = this.loc_xoa_dau(b.fullname);
+        var nameA = str.toUpperCase();//chuyển hết thành chữ hoa
+
+        let str2 = b.code;
+
+
+        str2 = str2.replace(/\s+/g, ' ');
+        // loại bỏ toàn bộ dấu space (nếu có) ở 2 đầu của chuỗi
+        str2 = str2.trim();
+        // bắt đầu xóa dấu tiếng việt  trong chuỗi
+        str2 = str2.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+        str2 = str2.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+        str2 = str2.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+        str2 = str2.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+        str2 = str2.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+        str2 = str2.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+        str2 = str2.replace(/đ/g, "d");
+        str2 = str2.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
+        str2 = str2.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
+        str2 = str2.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
+        str2 = str2.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
+        str2 = str2.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
+        str2 = str2.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
+        str2 = str2.replace(/Đ/g, "D");
+
+        var nameB = str2.toUpperCase(); 
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        // name trùng nhau
+        return 0;
+      });
+    // this.userConfigData= array;
+    this.timesCode ++;
+  }else{
+    const array = this.userConfigData;
+    array.reverse(function (a, b)//đảo ngược lại sort
+     {
+      let str = a.code; 
+      str = str.replace(/\s+/g, ' ');
+      // loại bỏ toàn bộ dấu space (nếu có) ở 2 đầu của chuỗi
+      str = str.trim();
+      // bắt đầu xóa dấu tiếng việt  trong chuỗi
+      str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+      str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+      str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+      str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+      str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+      str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+      str = str.replace(/đ/g, "d");
+      str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
+      str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
+      str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
+      str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
+      str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
+      str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
+      str = str.replace(/Đ/g, "D");
+
+      // var A = this.loc_xoa_dau(a.fullname);
+      // var B = this.loc_xoa_dau(b.fullname);
+      var nameA = str.toUpperCase();
+
+      let str2 = b.code;
+
+
+      str2 = str2.replace(/\s+/g, ' ');
+      // loại bỏ toàn bộ dấu space (nếu có) ở 2 đầu của chuỗi
+      str2 = str2.trim();
+      // bắt đầu xóa dấu tiếng việt  trong chuỗi
+      str2 = str2.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+      str2 = str2.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+      str2 = str2.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+      str2 = str2.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+      str2 = str2.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+      str2 = str2.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+      str2 = str2.replace(/đ/g, "d");
+      str2 = str2.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
+      str2 = str2.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
+      str2 = str2.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
+      str2 = str2.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
+      str2 = str2.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
+      str2 = str2.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
+      str2 = str2.replace(/Đ/g, "D");
+
+      var nameB = str2.toUpperCase(); // chuyển thường thành hoa
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      // name trùng nhau
+      return 0;
+    });
+  this.timesCode =1;
+  } 
+  this.userConfigData= array;
+    }
+    timesGroupName=1;
+    sortGroupName(){
+      const array = this.userConfigData;
+      if(this.timesGroupName===1){
+        array.sort(function (a, b) {
+          let str = a.name; 
+          str = str.replace(/\s+/g, ' ');
+          // loại bỏ toàn bộ dấu space (nếu có) ở 2 đầu của chuỗi
+          str = str.trim();
+          // bắt đầu xóa dấu tiếng việt  trong chuỗi
+          str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+          str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+          str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+          str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+          str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+          str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+          str = str.replace(/đ/g, "d");
+          str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
+          str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
+          str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
+          str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
+          str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
+          str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
+          str = str.replace(/Đ/g, "D");
+  
+          // var A = this.loc_xoa_dau(a.fullname);
+          // var B = this.loc_xoa_dau(b.fullname);
+          var nameA = str.toUpperCase();//chuyển hết thành chữ hoa
+  
+          let str2 = b.name;
+  
+  
+          str2 = str2.replace(/\s+/g, ' ');
+          // loại bỏ toàn bộ dấu space (nếu có) ở 2 đầu của chuỗi
+          str2 = str2.trim();
+          // bắt đầu xóa dấu tiếng việt  trong chuỗi
+          str2 = str2.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+          str2 = str2.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+          str2 = str2.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+          str2 = str2.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+          str2 = str2.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+          str2 = str2.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+          str2 = str2.replace(/đ/g, "d");
+          str2 = str2.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
+          str2 = str2.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
+          str2 = str2.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
+          str2 = str2.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
+          str2 = str2.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
+          str2 = str2.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
+          str2 = str2.replace(/Đ/g, "D");
+  
+          var nameB = str2.toUpperCase(); 
+          if (nameA < nameB) {
+            return -1;
+          }
+          if (nameA > nameB) {
+            return 1;
+          }
+          // name trùng nhau
+          return 0;
+        });
+      // this.userConfigData= array;
+      this.timesGroupName ++;
+    }else{
+      const array = this.userConfigData;
+      array.reverse(function (a, b)//đảo ngược lại sort
+       {
+        let str = a.name; 
+        str = str.replace(/\s+/g, ' ');
+        // loại bỏ toàn bộ dấu space (nếu có) ở 2 đầu của chuỗi
+        str = str.trim();
+        // bắt đầu xóa dấu tiếng việt  trong chuỗi
+        str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+        str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+        str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+        str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+        str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+        str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+        str = str.replace(/đ/g, "d");
+        str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
+        str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
+        str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
+        str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
+        str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
+        str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
+        str = str.replace(/Đ/g, "D");
+  
+        // var A = this.loc_xoa_dau(a.fullname);
+        // var B = this.loc_xoa_dau(b.fullname);
+        var nameA = str.toUpperCase();
+  
+        let str2 = b.name;
+  
+  
+        str2 = str2.replace(/\s+/g, ' ');
+        // loại bỏ toàn bộ dấu space (nếu có) ở 2 đầu của chuỗi
+        str2 = str2.trim();
+        // bắt đầu xóa dấu tiếng việt  trong chuỗi
+        str2 = str2.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+        str2 = str2.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+        str2 = str2.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+        str2 = str2.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+        str2 = str2.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+        str2 = str2.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+        str2 = str2.replace(/đ/g, "d");
+        str2 = str2.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
+        str2 = str2.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
+        str2 = str2.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
+        str2 = str2.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
+        str2 = str2.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
+        str2 = str2.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
+        str2 = str2.replace(/Đ/g, "D");
+  
+        var nameB = str2.toUpperCase(); // chuyển thường thành hoa
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+        // name trùng nhau
+        return 0;
+      });
+    this.timesGroupName =1;
+    } 
+   this.userConfigData= array;
+    }
   // Refresh
   ngOnDestroy() {
     this.ngOnInit();

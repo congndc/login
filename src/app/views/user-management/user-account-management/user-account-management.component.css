@@ -30,17 +30,6 @@ mat-icon {
   padding: 20px;
 }
 
-// .table {
-//   padding: 20px;
-// }
-
-// .table tbody tr td,
-// .table thead th,
-// .table thead {
-//   border-left: 1px solid rgb(5, 5, 5);
-//   border-right: 1px solid rgb(5, 5, 5);
-// }
-
 .output {
   padding: 20px;
 }
@@ -70,28 +59,7 @@ span.ui-column-resizer {
   font-weight: 400;
   src: url(https://fonts.gstatic.com/s/materialicons/v53/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format('woff2');
 }
-/* _print.scss:116 */
-.table-bordered {
-  th,
-  td {
-    border: 1px solid #c8ced3 !important;
-  }
-}
 
-/* _tables.scss:48 */
-// .table-bordered {
-//   th,
-//   td {
-//     border: chartreuse;
-//   }
-
-//   thead {
-//     th,
-//     td {
-//       border-bottom-width: (2 * 1);
-//     }
-//   }
-// }
 .material-icons {
   font-family: 'Material Icons';
   font-weight: normal;
@@ -146,7 +114,6 @@ span.ui-column-resizer {
   caret-color: #f44336;
 }
 
-//checkbox
 .container{
   display: inline-block;
   position:relative;
@@ -215,13 +182,14 @@ span.ui-column-resizer {
     cursor: inherit;
     display: block;
 }
+
 form{
   font-size: small;
 }
-.respon{
-  margin-top: -4px;
+
+:host /deep/ .multiselect-dropdown .dropdown-list .item2 .multiselect-item-checkbox input[type=checkbox]{
+  /* background-color: red; */
+  width: 0px;
 }
-.respon1{
-  margin-top: -4px;
-}
+
 

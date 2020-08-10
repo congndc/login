@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { UserGroupConfigurationComponent } from './User-group-configuration/User-group-configuration.component';
 import { UserAccountManagementComponent } from './user-account-management/user-account-management.component';
+import { AddUserAccountManagementComponent } from './add-user-account-management/add-user-account-management.component';
 
 
 const routes: Routes = [
@@ -26,9 +27,16 @@ const routes: Routes = [
         path: 'user-account-management',
         component: UserAccountManagementComponent,
         data: {
-          title: 'Quản lý tài khoản người dùng'
+          title: 'Quản lý tài khoản người sử dụng'
         }
       },
+      {
+        path: 'add-user-account-management',
+        component: AddUserAccountManagementComponent,
+        data: {
+          title: 'Thêm mới người sử dụng'
+        }
+      }
     ]
   }
 ];

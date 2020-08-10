@@ -9,3 +9,123 @@ app-sidebar-nav-link-content{
   app-sidebar{
     width: 250px;
   }
+
+//
+cui-breadcrumb .breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.0rem;
+    list-style: none;
+    background-color: #fff;
+    border-radius: 0;
+  
+}
+#tblUserAccount td{
+  padding:0;
+}
+#tblUserGroupConfig td{
+  padding:0;
+}
+@media only screen and (max-width: 700px) and (min-width: 572px){
+  .table-responsive-sm{
+    display: none;
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+
+//Iphone 678
+@media only screen and (max-device-width: 375px){
+  #btnR{
+    margin-top: 1px;
+    margin-bottom: 5px;
+  }
+  #responCheckbox{
+    position: relative;
+    left: 13px;
+  }
+  .hienthi{
+    position: relative;
+    top: 24px;
+  }
+  #hienthiOption{
+    position: relative;
+    bottom: 2px;
+    width: 102px;
+    left: 188px;
+  }
+  #btnImport{
+    position: relative;
+    right: 7px;
+  }
+  #btnUserAccount{
+    margin-top: 1%;
+    margin-bottom: 1%;
+  }
+}
+
+//pixel 2// iphone X
+@media only screen and (min-width: 411px) and (max-width:450px){
+  #btnImport{
+    margin-top: 4px;
+  }
+  #responCheckbox{
+    position: relative;
+    left: 13px;
+  }
+  .hienthi{
+    position: relative;
+    top: 24px;
+    left: 11px;
+  }
+  #hienthiOption{
+    position: relative;
+    bottom: 2px;
+    width: 102px;
+    left: 225px;
+  }
+  #btnR{
+    margin-top:-3px;
+  }
+  
+}
+
+//Iphone 5/SE
+@media only screen and (max-device-width: 320px){
+  #btnR{
+    margin-top: 1px;
+    margin-bottom: 5px;
+  }
+  #responCheckbox{
+    position: relative;
+    left: 13px;
+  }
+  .hienthi{
+    position: relative;
+    top: 24px;
+  }
+  #hienthiOption{
+    position: relative;
+    bottom: 2px;
+    width: 102px;
+    left: 80px;
+  }
+  #btnImport{
+    position: relative;
+    right: 0px;
+  }
+   
+}
+
+@media only screen and (max-width: 1219px) and (min-width: 320px){
+  #btnXoa{
+    margin-top:3%;
+  }
+}
+
+
+

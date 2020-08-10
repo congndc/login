@@ -5,6 +5,8 @@ import { AuthenticationService } from '../../_services';
 import { User } from '../../_models';
 import { Router } from '@angular/router';
 import { constants } from 'os';
+import { DomSanitizer } from '@angular/platform-browser';
+import { SafeUrlPipe } from '../../_services/safe-url.pipe.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,29 +19,38 @@ export class DefaultLayoutComponent {
   currentUser: User;
   listInformationUserAccount: [];
   groupCode: string;
+  idUser: number;
+  srcData: any;
+  public img: string;
   constructor(
     private router: Router,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private safeUrlPipe: SafeUrlPipe
   ) {
     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
   }
   toggleMinimize(e) {
     this.sidebarMinimized = e;
   }
+  loadImage() {
+    this.authenticationService.getPictureUser()
+        .subscribe(
+              (result) => {
+                let url  = window.URL.createObjectURL(result);
+                this.srcData = this.safeUrlPipe.transform(url);
+              });
+            }
   getAccountInformation() {
     this.authenticationService.getAccountInformation()
       .subscribe(
         (data) => {
-          var groupCodes = '';
-          this.listInformationUserAccount = data.account[0];
-          for (let i = 0; i < data.groups.length; i++) {
-            groupCodes += data.groups[i]['group_name'] + ', ';
-        }
-        this.groupCode = groupCodes.slice(0, -2);
+          this.listInformationUserAccount = data.users[0];
+          this.idUser = data.users[0]['id'];
         },
         error => {
           return false;
         });
+        this.loadImage();
   }
   changePassword(){
     this.router.navigate(['/account/change-pass']);

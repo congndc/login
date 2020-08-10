@@ -19,14 +19,14 @@ export class UserGroupConfigurationService {
   }
 
   // Lấy danh sách lớp
-  listDmLop(grade_code, grade_insert) {
-    return this.http.post<any>(`${environment.apiUrl}/class/dropdownlist`, { grade_code, grade_insert })
+  listDmLop(grades: any) {
+    return this.http.post<any>(`${environment.apiUrl}/class/dropdownlist`, { grades })
       .pipe(map(res => {
         return res;
       }));
   }
 
-  // Lấy danh sách cấu hình nhóm người dùng
+  // Lấy danh sách cấu hình nhóm người sử dụng
   listUserGroupConfig() {
     return this.http.post<any>(`${environment.apiUrl}/group_user_configuration/list`, null)
       .pipe(map(res => {
@@ -42,7 +42,7 @@ export class UserGroupConfigurationService {
       });
   }
 
-  // Import excel cấu hình nhóm người dùng
+  // Import excel cấu hình nhóm người sử dụng
   importFile(formData: FormData) {
     let headers = new HttpHeaders();
 
@@ -57,7 +57,7 @@ export class UserGroupConfigurationService {
       }));
   }
 
-  // Export file Excel cấu hình nhóm người dùng
+  // Export file Excel cấu hình nhóm người sử dụng
   public exportFile(search: any, classes: [], grades: [], status: any) {
 
     if (search) {
@@ -78,18 +78,18 @@ export class UserGroupConfigurationService {
     }
   }
 
-  // Thêm mới cấu hình nhóm người dùng
+  // Thêm mới cấu hình nhóm người sử dụng
   addUserGroupConfig(code: string, name: string, grade_id: any, class_id: any, description: string) {
     return this.http
       .post<any>(`${environment.apiUrl}/group_user_configuration/create`, { code, name, grade_id, class_id, description })
       .pipe(
-        map((res) => {
+        map(res => {
           return res;
         })
       );
   }
 
-  // GetById cấu hình nhóm người dùng, sử dụng cho form cập nhật cấu hình nhóm người dùng
+  // GetById cấu hình nhóm người sử dụng, sử dụng cho form cập nhật cấu hình nhóm người sử dụng
   getByIdUserGroupConfig(id: number) {
     return this.http
       .get<any>(`${environment.apiUrl}/group_user_configuration/show/${id}`)
@@ -98,8 +98,8 @@ export class UserGroupConfigurationService {
       }));
   }
 
-  // Cập nhật cấu hình nhóm người dùng
-  updateUserGroupConfig(id: number, code: string, name: string, grade_id: number, class_id: number, status: number, description: string) {
+  // Cập nhật cấu hình nhóm người sử dụng
+  updateUserGroupConfig(id: number, code: string, name: string, grade_id: any, class_id: any, status: number, description: string) {
     return this.http
       .put<any>(`${environment.apiUrl}/group_user_configuration/update/${id}`, { code, name, grade_id, class_id, status, description })
       .pipe(map(res => {
@@ -107,7 +107,7 @@ export class UserGroupConfigurationService {
       }));
   }
 
-  // Xóa cấu hình nhóm người dùng
+  // Xóa cấu hình nhóm người sử dụng
   deleteUserGroupConfig(id: number) {
     return this.http
       .delete<any>(`${environment.apiUrl}/group_user_configuration/delete/${id}`)
@@ -116,26 +116,20 @@ export class UserGroupConfigurationService {
       }));
   }
 
-  // Tìm kiếm cấu hình nhóm người dùng theo mã nhóm và tên nhóm
+  // Tìm kiếm cấu hình nhóm người sử dụng theo mã nhóm và tên nhóm
   searchByKeyWord(search: any) {
     return this.http
       // .get(`${environment.apiUrl}/group_user_configuration/list?search=/${search}')
-      .post<any>(`${environment.apiUrl}/group_user_configuration/list?search=${search}`, null)
+      .post<any>(`${environment.apiUrl}/group_user_configuration/list`,{search})
       .pipe(map(res => {
         return res;
       }));
   }
 
-  searchByInput(grades, classes, status) {
+  searchByInput(grades: any, classes: any, status) {
     return this.http.post(`${environment.apiUrl}/group_user_configuration/list`, { grades, classes, status })
       .pipe(map(res => {
         return res;
       }));
   }
-  // searchByInput(grades: any) {
-  //   return this.http.get(`${environment.apiUrl}/group_user_configuration/list`, { params: { grades: JSON.stringify(grades)}})
-  //      .pipe(map(res => {
-  //     return res;
-  //   }));
-  // }
 }

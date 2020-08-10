@@ -49,13 +49,30 @@ export const navItems: INavData[] = [
     icon: 'icon-plus',
     children: [
       {
-        name: 'Cấu hình nhóm người sử dụng',
+        name: 'Cấu hình nhóm NSD',
         url: '/user-management/user-management',
         icon: 'icon-puzzle',
       },
       {
-        name: 'Quản lý tài khoản người dùng',
+        name: 'Quản lý tài khoản NSD',
         url: '/user-management/user-account-management',
+        icon: 'icon-puzzle',
+      },
+      {
+        name: 'Thêm tài khoản NSD',
+        url: '/user-management/add-user-account-management',
+        icon: 'icon-puzzle',
+      },
+    ],
+  },
+  {
+    name: 'Thông tin cấu hình',
+    url: '/configuration-information',
+    icon: 'icon-plus',
+    children: [
+      {
+        name: 'Cấu hình học kỳ',
+        url: '/configuration-information/semester-configuration',
         icon: 'icon-puzzle',
       },
     ],

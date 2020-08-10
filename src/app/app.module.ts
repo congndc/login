@@ -48,6 +48,7 @@ import { ForgotPasswordComponent } from './views/forgot-password/forgot-password
 import { ChangePasswordComponent } from './views/change-password/change-password.component';
 
 import { ToastrModule } from 'ngx-toastr';
+import { SafeUrlPipe } from './_services/safe-url.pipe.service';
 
 @NgModule({
   imports: [
@@ -78,6 +79,7 @@ import { ToastrModule } from 'ngx-toastr';
     ChangePasswordComponent
   ],
   providers: [
+    SafeUrlPipe,
   { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
 

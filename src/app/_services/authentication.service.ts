@@ -88,4 +88,8 @@ export class AuthenticationService {
         })
       );
   }
+  getPictureUser() {
+    return this.http.get(`${environment.apiUrl}/user/show_picture_infor_user`, { responseType: 'blob' });
+    }
+
 }
